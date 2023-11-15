@@ -8,8 +8,8 @@ Easily hide/show the main layout elements of a YouTube page.
 Just click on the chrome extension's icon to display the layout,
 and click on the element you want to hide
 
-<img src="hider.png">
+<img src="hider2.png">
 
 Designed and developed by Benjamin Floyd Rubin
 
-Last updated: October 30th# hider-chrome-extension-react
+Last updated: November 15th, 2023
