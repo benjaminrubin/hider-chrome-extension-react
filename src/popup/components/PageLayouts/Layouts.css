@@ -1,0 +1,127 @@
+.layout-element {
+  text-align: center;
+  padding: 0.5rem 1rem;
+  box-sizing: border-box;
+  margin: 0.25rem;
+  border-radius: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: cubic-bezier();
+  transition-duration: 100ms;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.displayed {
+  background-color: #eb4928;
+  color: white;
+  border: 1px solid #910d0d;
+}
+.displayed:hover {
+  background-color: #c33619;
+}
+
+.displayed:active {
+  background-color: #eb4928;
+  transform: scale(0.96);
+}
+
+.hidden {
+  background-color: #d9d9d9;
+  color: #5c5c5c;
+  border: 1px solid #c2c2c2;
+}
+.hidden:hover {
+  background-color: #bfbfbf;
+}
+.hidden:active {
+  background-color: #d9d9d9;
+  transform: scale(0.96);
+}
+
+/* HOME PAGE */
+.home-page {
+  display: grid;
+  grid-template-areas:
+    "navigation navigation navigation navigation"
+    "sidebar videos videos videos"
+    "sidebar videos videos videos"
+    "sidebar videos videos videos";
+}
+
+#sidebar {
+  grid-area: sidebar;
+  padding: 0.5rem 0rem;
+  height: 10rem;
+}
+
+#videos {
+  grid-area: videos;
+}
+
+/* SEARCH PAGE */
+.search-page {
+    display: grid;
+    grid-template-areas: 
+    "navigation navigation navigation navigation"
+    "sidebar results results results"
+    "sidebar results results results"
+    "sidebar results results results";
+}
+
+#results {
+    grid-area: results;
+}
+
+
+/* VIDEO PAGE */
+.video-page {
+  display: grid;
+  grid-template-areas:
+    "navigation navigation navigation navigation"
+    "player player player recommendations"
+    "title-description title-description title-description recommendations"
+    "comments comments comments recommendations";
+}
+
+#navigation {
+  grid-area: navigation;
+}
+
+#player {
+  grid-area: player;
+  height: 6rem;
+  font-size: 3rem;
+}
+
+#title-and-description {
+  grid-area: title-description;
+}
+
+#comments {
+  grid-area: comments;
+  height: 5rem;
+}
+
+#recommendations {
+  grid-area: recommendations;
+  min-height: 3.5rem;
+}
+
+#live-chat {
+  grid-area: live-chat;
+  min-height: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .hidden {
+    background-color: #777777;
+    color: white;
+  }
+  .hidden:hover {
+    background-color: #656565;
+  }
+}
