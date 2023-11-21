@@ -4,9 +4,10 @@ import { ELEMENT_STATE, ELEMENT_STATE_ACTION } from "./GlobalUtils";
 import { initialAppState } from "./state/AppStateReducer.jsx";
 
 const YOUTUBE_URL = "www.youtube.com";
+const TIKTOK_URL = "www.tiktok.com";
 
 const APP_MAPPINGS = {
-  "www.youtube.com": {
+  [YOUTUBE_URL]: {
     app: "youtube",
     pages: {
       "/watch": "video_page",
@@ -14,34 +15,44 @@ const APP_MAPPINGS = {
       "/": "home_page",
     },
   },
-  "www.tiktok.com": {
+  [TIKTOK_URL]: {
     app: "tiktok",
     pages: {},
   },
 };
 
-const PAGE_ELEMENT_SELECTORS = {
-  youtube: {
-    navigation: ["masthead-container"],
-    player: ["player"],
-    "title-and-description": ["above-the-fold"],
-    comments: ["comments"],
-    recommendations: ["related", "items"],
-    "live-chat": ["chat-container"],
-    homeShorts: [],
-    searchShorts: [],
-    videos: ["primary"],
-    sidebar: ["guide-content"],
-    results: ["page-manager"],
-  },
-  results: {},
-  home: {},
-  tiktok: {
-    url: "www.tiktok.com",
-  },
+// Verify url is valid and matching to the app
+export const doesAppMatchUrl = (app, url) => {
+  console.log("what is the url?", url);
+  for (const domain in APP_MAPPINGS) {
+    if (url.includes(domain) && APP_MAPPINGS[domain].app === app) {
+      return true;
+    }
+  }
+  return false;
 };
 
-// When extension is installed
+const TOGGLE_FUNCTION_TYPE = {
+  STATIC: "static",
+  DYNAMIC: "dynamic",
+};
+
+const getToggleFunctionType = (element) => {
+  let toggleFunctionType;
+  switch (element) {
+    case "homeShorts":
+    case "searchShorts":
+      toggleFunctionType = TOGGLE_FUNCTION_TYPE.DYNAMIC;
+      break;
+    default:
+      toggleFunctionType = TOGGLE_FUNCTION_TYPE.STATIC;
+  }
+  return toggleFunctionType;
+};
+
+/**
+ * Installation Logic
+ */
 chrome.runtime.onInstalled.addListener(async () => {
   // check if there is an appState in chrome storage
   const appState = await chrome.storage.local.get("appState");
@@ -50,208 +61,126 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
-// When a message is received from the Popup
+/**
+ * Action Message Receival Logic
+ */
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  const { app, element, action } = message;
-
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 
-  let toggleFunction;
+  console.log("tabs", tabs[0]);
 
-  /** 
-   * Dictate the appropriate toggleFunction script to execute
-   * 1. Static elements need to be queried one time
-   * 2. Dynamic elements (those that appear while scrolling) need to be continuously queried
-  */
-  switch (element) {
-    case 'homeShorts':
-    case 'searchShorts':
-      toggleFunction = dynamicToggleLayoutElement;
-      break;
-    default:
-      toggleFunction = toggleLayoutElement;
+  // Return if we are in an irregular (i.e. settings) tab
+  if (!tabs[0]) return;
+
+  // Skip if not in a supported URL or the app does not match the URL
+  console.log('This tabs[0] which should show a url is always giving me shit:', tabs[0]);
+  const currentURL = tabs[0].url;
+  console.log("currentURL is", currentURL);
+  if (!doesAppMatchUrl(message.app, currentURL)) {
+    return;
   }
 
-  if (tabs[0]) {
+  // Retrieve the details of the message from popup
+  const { app, element, action } = message;
+
+  // Determine the toggleFunctionType (static/dynamic)
+  const toggleFunctionType = getToggleFunctionType(element);
+
+  // Send a message to content.js
+  const response = await chrome.tabs.sendMessage(tabs[0].id, {
+    app,
+    element,
+    action,
+    toggleFunctionType,
+  });
+
+  // Update chrome's storage
+  chrome.storage.local.get("appState", async (result) => {
+    let newAppState = result.appState;
+
+    // Check if appState is not undefined, if it is, use the initial appState
+    if (!newAppState) {
+      newAppState = initialAppState;
+    }
+
+    // Update the specific element's state within appState
     try {
-      await chrome.scripting.executeScript({
-        target: { tabId: tabs[0].id },
-        func: toggleFunction,
-        args: [app, element, action, JSON.stringify(PAGE_ELEMENT_SELECTORS)],
-      });
+      const updatedState =
+        action === ELEMENT_STATE_ACTION.HIDE
+          ? ELEMENT_STATE.HIDDEN
+          : ELEMENT_STATE.DISPLAYED;
+      newAppState[app][element].state = updatedState;
     } catch (error) {
-      console.error("Error executing the script within onMessage:", error);
+      console.error("Error updating the app state:", error);
     }
 
-    // Update chrome's storage
-    chrome.storage.local.get("appState", async (result) => {
-      let newAppState = result.appState;
-
-      // Check if appState is not undefined, if it is, use the initial appState
-      if (!newAppState) {
-        newAppState = initialAppState;
-      }
-
-      // Update the specific element's state within appState
-      try {
-        const updatedState =
-          action === ELEMENT_STATE_ACTION.HIDE
-            ? ELEMENT_STATE.HIDDEN
-            : ELEMENT_STATE.DISPLAYED;
-        newAppState[app][element].state = updatedState;
-      } catch (error) {
-        console.error("Error updating the app state:", error);
-      }
-
-      // Save the updated appState back to chrome's storage
-      await chrome.storage.local.set({ appState: newAppState });
-    });
-  }
+    // Save the updated appState back to chrome's storage
+    await chrome.storage.local.set({ appState: newAppState });
+  });
 });
-
-/**
- * This function toggles the display of static elements on the webpage
- * via executing a script
- */
-function toggleLayoutElement(app, element, action, serializedElementSelectors) {
-  const elementSelectors = JSON.parse(serializedElementSelectors);
-  const pageElementIds = elementSelectors[app][element];
-
-  if (pageElementIds && pageElementIds.length > 0) {
-    for (const elementId of pageElementIds) {
-      // for (let i = 0; i < pageElementIds.length; i++) {
-      // const elementId = pageElementIds[i];
-      const element = document.getElementById(elementId);
-      const currentDisplayValue = window.getComputedStyle(element).display;
-
-      switch (action) {
-        case "show":
-          if (currentDisplayValue === "none") {
-            element.style.display = "";
-          }
-          break;
-        case "hide":
-          if (currentDisplayValue !== "none") {
-            element.style.display = "none";
-          }
-          break;
-        default:
-          "";
-      }
-    }
-  }
-}
-
-/**
- * This function accommodates for dynamic elements that appear as the user
- * scrolls down the webpage. Using the mutationObserver, we are listening
- * for elements that appear and check if they meet our criteria for toggling
- */
-function dynamicToggleLayoutElement(app, element, action, serializedElementSelectors) {
-  const elementSelectors = JSON.parse(serializedElementSelectors);
-  
-  const targetInnerText = {
-    homeShorts: { innerText: 'shorts', selector: '#dismissible'},
-    searchShorts: {innerText:'shorts', selector: 'ytd-reel-shelf-renderer'},
-    peopleAlsoWatched: 'people also watched'
-  }
-
-
-  // Function to compare innerText, case-insensitive
-  const matchesInnerText = (el, text) => {
-    return el.innerText.toLowerCase().includes(text.toLowerCase());
-  };
-
-   // Function to apply styles to an element based on action
-   const applyStyleToElement = (el) => {
-    if (matchesInnerText(el, targetInnerText[element].innerText)) {
-      el.style.display = action === "hide" ? "none" : "";
-    }
-   };
-  
-  // Find and apply styles to existing dismissible elements
-  const existingDismissibles = document.querySelectorAll(targetInnerText[element].selector);
-  existingDismissibles.forEach(applyStyleToElement);
-  
-  // Mutation Observer callback 
-  const mutationObserverCallback = (mutations) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (node.id === 'dismissible') {
-          applyStyleToElement(node);
-        }
-      });
-    });
-  };
-  
-  // Create a Mutation Observer to observe for dynamically added dismissible elements
-  const mutationObserver = new MutationObserver(mutationObserverCallback);
-  mutationObserver.observe(document.body, { childList: true, subtree: true });
-}
 
 /**
  * When new tab is activated:
  * 1. Apply layout style updates
- * 2. Switch the "lastSelectedState.lastSelectedPage" state
+ * 2. Switch the "lastSelectedState.lastSelectedPage" state so that the popup loads the correct page for the user on activation
  */
-chrome.tabs.onActivated.addListener(() => {
-  // Query for the current tab
-  chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-    if (tabs) {
-      // The first tab is the current tab
-      const tab = tabs[0];
+chrome.tabs.onActivated.addListener(async () => {
 
-      if (tab.url) {
-        try {
-          // Retrieve the current URL
-          const url = new URL(tab.url);
-          const hostname = url.hostname;
-          const pathname = url.pathname;
+  console.log('Tab is activated')
 
-          if (hostname.includes(YOUTUBE_URL)) {
-            // Get the stored state from chrome.storage
-            const result = await chrome.storage.local.get("appState");
-            const appState = result.appState;
-            const app = APP_MAPPINGS[YOUTUBE_URL].app;
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 
-            // Get all the relevent layout elements on the current page
-            const pageLayoutElements = appState.youtube;
+  // Return if we are in an irregular (i.e. settings) tab
+  if (!tabs[0]) return;
 
-            // Update page's layout styles
-            Object.entries(pageLayoutElements).forEach(
-              ([element, { state: elementDisplayState }]) => {
-                // Determine the action based on the state
-                const action =
-                  elementDisplayState === ELEMENT_STATE.DISPLAYED
-                    ? ELEMENT_STATE_ACTION.SHOW
-                    : ELEMENT_STATE_ACTION.HIDE;
+  // Skip if not in a supported URL or the app does not match the URL
+  const currentURL = tabs[0].url;
+  const url = new URL(currentURL);
+  console.log("url is", url); // TODO: REMOVE THIS LINE
+  const hostname = url.hostname;
+  const pathname = url.pathname;
+  const app = APP_MAPPINGS[hostname] ? APP_MAPPINGS[hostname].app : null;
 
-                console.log("The toggle action is", action);
+  // If the URL does not correspond to a supported app
+  if (!app) {
+    return;
+  }
 
-                chrome.scripting.executeScript({
-                  target: { tabId: tab.id },
-                  func: toggleLayoutElement,
-                  args: [
-                    app,
-                    element,
-                    action,
-                    JSON.stringify(PAGE_ELEMENT_SELECTORS),
-                  ],
-                });
-              }
-            );
+  // Get the current App's state
+  const result = await chrome.storage.local.get("appState");
+  const appState = result.appState;
 
-            // Update the lastSelectedPage value
-            appState.lastSelectedState.lastSelectedPage =
-              APP_MAPPINGS[hostname].pages[pathname];
-            await chrome.storage.local.set({ appState });
-          }
-        } catch (error) {
-          console.error("There was an error:", error);
-        }
-      }
+  // Retrieve all app-related page layout elements
+  const pageLayoutElements = appState[app];
+
+  // For each element send a message to content
+  Object.entries(pageLayoutElements).forEach(
+    async ([element, { state: elementDisplayState }]) => {
+      // Determine the action based on the state
+      const action =
+        elementDisplayState === ELEMENT_STATE.DISPLAYED
+          ? ELEMENT_STATE_ACTION.SHOW
+          : ELEMENT_STATE_ACTION.HIDE;
+
+      // Determine the toggleFunctionType (static/dynamic)
+      const toggleFunctionType = getToggleFunctionType(element);
+
+      // Send a message to content.js
+      const response = await chrome.tabs.sendMessage(tabs[0].id, {
+        app,
+        element,
+        action,
+        toggleFunctionType,
+      });
     }
-  });
+  );
+
+  // Update the state's last selected page to correspond to the URL's pathname
+  const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
+  appState.lastSelectedState.lastSelectedPage = updatedLastSelectedPage;
+
+  // Save the updated appState back to chrome's storage
+  await chrome.storage.local.set({ appState });
 });
 
 /**
@@ -259,74 +188,64 @@ chrome.tabs.onActivated.addListener(() => {
  * to the layout based on storage values
  */
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  // If the status is complete
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+
+  console.log("tab is reloading", changeInfo.status);
+
+  // wait for tab to finish loading
   if (changeInfo.status === "complete") {
-    try {
-      // Retrieve the current URL
-      const url = new URL(tab.url);
-      const hostname = url.hostname;
-      const pathname = url.pathname;
+    // Skip if not in a supported URL or the app does not match the URL
+    const currentURL = tabs[0].url;
+    const url = new URL(currentURL);
 
-      if (hostname.includes(YOUTUBE_URL)) {
-        // Get the stored state from chrome.storage
-        const result = await chrome.storage.local.get("appState");
-        const appState = result.appState;
-        const app = APP_MAPPINGS[YOUTUBE_URL].app;
+    const hostname = url.hostname;
+    const pathname = url.pathname;
+    const app = APP_MAPPINGS[hostname] ? APP_MAPPINGS[hostname].app : null;
 
-        // Get all the relevent layout elements on the current page
-        const pageLayoutElements = appState.youtube;
-
-        // Update page's layout styles
-        Object.entries(pageLayoutElements).forEach(
-          ([element, { state: elementDisplayState }]) => {
-            // Determine the action based on the state
-            const action =
-              elementDisplayState === ELEMENT_STATE.DISPLAYED
-                ? ELEMENT_STATE_ACTION.SHOW
-                : ELEMENT_STATE_ACTION.HIDE;
-
-            console.log("The toggle action is", action);
-
-            chrome.scripting.executeScript({
-              target: { tabId: tab.id },
-              func: toggleLayoutElement,
-              args: [
-                app,
-                element,
-                action,
-                JSON.stringify(PAGE_ELEMENT_SELECTORS),
-              ],
-            });
-          }
-        );
-
-        // Update the lastSelectedPage value
-        appState.lastSelectedState.lastSelectedPage =
-          APP_MAPPINGS[hostname].pages[pathname];
-        await chrome.storage.local.set({ appState });
-      }
-    } catch (error) {
-      console.error("There was an error:", error);
+    // If the URL does not correspond to a supported app
+    if (!app) {
+      return;
     }
+
+    // Get the current App's state
+    const result = await chrome.storage.local.get("appState");
+    const appState = result.appState;
+
+    // Retrieve all app-related page layout elements
+    const pageLayoutElements = appState[app];
+
+    // For each element send a message to content
+    Object.entries(pageLayoutElements).forEach(
+      async ([element, elementData]) => {
+
+        console.log('Element is', element);
+        console.log('Element data is', elementData);
+
+        // Determine the action based on the state
+        const action =
+          elementData.state === ELEMENT_STATE.DISPLAYED
+            ? ELEMENT_STATE_ACTION.SHOW
+            : ELEMENT_STATE_ACTION.HIDE;
+
+        if (action === ELEMENT_STATE_ACTION.HIDE) {
+          // Determine the toggleFunctionType (static/dynamic)
+          const toggleFunctionType = getToggleFunctionType(element);
+
+          const response = await chrome.tabs.sendMessage(tabs[0].id, {
+            app,
+            element,
+            action,
+            toggleFunctionType,
+          });
+        }
+      }
+    );
+
+    // Update the state's last selected page to correspond to the URL's pathname
+    const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
+    appState.lastSelectedState.lastSelectedPage = updatedLastSelectedPage;
+
+    // Save the updated appState back to chrome's storage
+    await chrome.storage.local.set({ appState });
   }
 });
-
-
-/**
- * Managing Resources - disconnecting the observer
- */
-// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-//   if (changeInfo.status === 'complete' && tab.active) {
-//     // Check if the new URL is relevant for the observer
-//     if (!isRelevantUrl(tab.url)) {
-//       // Send a message to content script to disconnect the observer
-//       chrome.tabs.sendMessage(tabId, { action: "disconnectObserver" });
-//     }
-//   }
-// });
-
-// chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-//   // Send a message to content script to disconnect the observer
-//   // (You might need to keep track of which tabs have active observers)
-//   chrome.tabs.sendMessage(tabId, { action: "disconnectObserver" });
-// });
