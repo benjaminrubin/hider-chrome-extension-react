@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import "./popup.css";
 import Logo from "./Logo.jsx";
-import { AppStateContext } from "../state/AppStateReducer.jsx";
-import YouTube from "./components/PageLayouts/YouTube/YouTube.jsx"
 import { APP_NAMES } from "../GlobalUtils.js";
+import Settings from "./components/Settings.jsx";
 
 
 export const APPS = {
   [APP_NAMES.YOUTUBE]: {
     LABEL: "YouTube",
-    COMPONENT: YouTube,
+    COMPONENT: Settings,
   },
   [APP_NAMES.TIKTOK]: {
     LABEL: "TikTok",
@@ -18,19 +17,8 @@ export const APPS = {
 };
 
 const App = () => {
-  const { state, dispatch } = useContext(AppStateContext);
-  // Retrieve the last selected app
-  const { lastSelectedApp: selectedApp } = state.lastSelectedState;
-  const SelectedAppComponent = APPS[selectedApp].COMPONENT;
 
-  if (!state) {
-    return (
-      <>
-        <Logo />
-        <h2 style={{ fontSize: '3rem'}}>Loading...</h2>
-        </>
-    )
-  }
+  const SelectedAppComponent = APPS[APP_NAMES.YOUTUBE].COMPONENT;
 
   return (
     <>

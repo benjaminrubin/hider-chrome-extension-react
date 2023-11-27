@@ -18,8 +18,8 @@
     },
     "content_scripts": [
       {
-        "matches": ["*://*.youtube.com/*", "*://*.tiktok.com/*"],
-        "js": ["content.js"]
+        "matches": ["*://*.youtube.com/*"],
+        "js": ["youtube-content.js"]
       }
     ],
     "permissions": ["scripting", "activeTab", "tabs", "storage"],

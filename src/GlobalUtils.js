@@ -3,11 +3,18 @@ export const ELEMENT_STATE_ACTION = {
   HIDE: "hide",
 };
 
+// keep
 export const ELEMENT_STATE = {
   DISPLAYED: "displayed",
   HIDDEN: "hidden",
 };
 
+export const ELEMENT_LOCK = {
+  LOCKED: 'locked',
+  UNLOCKED: 'unlocked'
+}
+
+// keep
 export const APP_NAMES = {
   YOUTUBE: "youtube",
 };
@@ -49,12 +56,4 @@ export const ELEMENT_SELECTORS = {
     },
   },
   tiktok: {},
-};
-
-export const updateChromeStorage = async (newState) => {
-  try {
-    await chrome.storage.local.set({ appState: newState });
-  } catch (error) {
-    console.error("Error updating chrome storage:", error);
-  }
 };

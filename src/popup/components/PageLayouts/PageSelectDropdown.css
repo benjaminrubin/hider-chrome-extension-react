@@ -59,3 +59,7 @@
 #page-button-selected:hover {
   background-color: #c33619;
 }
+
+.page-buttons {
+  margin-bottom: 1rem;
+}

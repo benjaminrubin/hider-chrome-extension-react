@@ -1,4 +1,5 @@
 .layout-element {
+  position: relative;
   text-align: center;
   padding: 0.5rem 1rem;
   box-sizing: border-box;
@@ -26,7 +27,7 @@
 
 .displayed:active {
   background-color: #eb4928;
-  transform: scale(0.96);
+  /* transform: scale(0.96); */
 }
 
 .hidden {
@@ -39,10 +40,29 @@
 }
 .hidden:active {
   background-color: #d9d9d9;
+  /* transform: scale(0.96); */
+}
+
+
+/* TOGGLE ALL BUTTON */
+#toggle-all {
+  background-color: #785DFF;
+  color: white;
+  font-weight: bold;
+  margin-bottom: .5rem;
+}
+
+#toggle-all:hover {
+  background-color: #5D45D8;
+}
+
+#toggle-all:active {
+  background-color: #785DFF;
   transform: scale(0.96);
 }
 
-/* HOME PAGE */
+
+/* YOUTUBE PAGE LAYOUTS */
 .home-page {
   display: grid;
   grid-template-areas:
@@ -50,16 +70,6 @@
     "sidebar videos videos videos"
     "sidebar videos videos videos"
     "sidebar videos videos videos";
-}
-
-#sidebar {
-  grid-area: sidebar;
-  padding: 0.5rem 0rem;
-  height: 10rem;
-}
-
-#videos {
-  grid-area: videos;
 }
 
 /* SEARCH PAGE */
@@ -72,11 +82,6 @@
     "sidebar results results results";
 }
 
-#results {
-    grid-area: results;
-}
-
-
 /* VIDEO PAGE */
 .video-page {
   display: grid;
@@ -87,6 +92,7 @@
     "comments comments comments recommendations";
 }
 
+/* ALL GRID AREAS */
 #navigation {
   grid-area: navigation;
 }
@@ -114,6 +120,61 @@
 #live-chat {
   grid-area: live-chat;
   min-height: 1.5rem;
+}
+
+#sidebar {
+  grid-area: sidebar;
+  padding: 0.5rem 0rem;
+  height: 10rem;
+}
+
+#videos {
+  grid-area: videos;
+}
+
+#results {
+  grid-area: results;
+}
+
+
+/* LOCK BUTTON RELATED */
+.lock-button {
+  position: absolute;
+  top: .25rem;
+  left: .25rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 20%;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lock-button:active {
+  transform: scale(0.90);
+}
+
+.lock-image {
+  width: 7px;
+  /* height: 20px; */
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  /* padding-top: 0.12rem; */
+}
+
+.locked {
+  background-color: #7F072C;
+}
+.locked:hover {
+  bacground-color: #56071F;
+}
+
+.unlocked {
+  background-color: #BABABA;
+}
+.unlocked:hover {
+  background-color: #BBBBBB;
 }
 
 @media (prefers-color-scheme: dark) {

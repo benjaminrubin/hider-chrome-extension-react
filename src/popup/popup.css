@@ -40,4 +40,8 @@ body {
   #top-instructions {
     color: white;
   }
+
+  .instructions {
+    color: white;
+  }
 }
