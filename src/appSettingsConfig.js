@@ -20,7 +20,7 @@ export const initialAppSettings = {
     pageSettings: {
       homePage: {
         label: "Home Page",
-        path: "",
+        path: "/",
         pageLayoutClassName: "home-page",
         pageElements: {
           mainLayout: ["navigation", "sidebar", "videos"],

@@ -1,16 +1,18 @@
-chrome.storage.onChanged.addListener(async () => {
+chrome.runtime.onMessage.addListener(async (message) => {
   await applySettings();
 });
 
 const applySettings = async () => {
   chrome.storage.local.get("appSettings", ({ appSettings }) => {
-    if (appSettings && appSettings.youtube) {
+    if (appSettings && appSettings.youtube && appSettings.generalSettings) {
       const { elementsSettings, pageSettings } = appSettings.youtube;
+      const { lastSelectedPage } = appSettings.generalSettings;
 
       let css = '';
 
       // Determine the current page and get its relevant elements
       const currentPagePath = window.location.pathname;
+      // const allPages = Object.keys(pageSettings)
       const currentPage = Object.values(pageSettings).find(page => page.path === currentPagePath) || {};
 
        // Combine both mainLayout and other arrays of page elements

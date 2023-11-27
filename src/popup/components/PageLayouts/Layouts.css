@@ -177,7 +177,7 @@
   background-color: #BBBBBB;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   .hidden {
     background-color: #777777;
     color: white;
@@ -185,4 +185,4 @@
   .hidden:hover {
     background-color: #656565;
   }
-}
+} */

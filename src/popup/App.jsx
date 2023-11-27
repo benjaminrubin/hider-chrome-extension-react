@@ -24,7 +24,7 @@ const App = () => {
     <>
       <h4 id="version">Version: 1.0.0</h4>
       <Logo />
-      <SelectedAppComponent />
+      <Settings />
     </>
   );
 };

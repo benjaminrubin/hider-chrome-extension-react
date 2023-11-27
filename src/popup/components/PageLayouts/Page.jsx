@@ -44,8 +44,12 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
         updatedVisibility;
       setAppSettings(newAppSettings);
 
-      // Update chrome.storage
-      chrome.storage.local.set({ appSettings: newAppSettings });
+      try {
+        // Update chrome.storage
+        chrome.storage.local.set({ appSettings: newAppSettings });
+      } catch (error) {
+        console.error("Error toggling element and saving state:", error)
+      }
     }
   };
 
@@ -54,8 +58,11 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
     newAppSettings[appName].elementsSettings[element].isLocked =
       updatedLockState;
     setAppSettings(newAppSettings);
-
-    chrome.storage.local.set({ appSettings: newAppSettings });
+    try {
+      chrome.storage.local.set({ appSettings: newAppSettings });
+    } catch (error) {
+      console.error("Error locking element and saving state:", error);
+    }
   };
 
   const toggleAllElements = () => {
@@ -81,7 +88,11 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
     });
   
     setAppSettings(newAppSettings);
-    chrome.storage.local.set({ appSettings: newAppSettings });
+    try {
+      chrome.storage.local.set({ appSettings: newAppSettings });
+    } catch (error) {
+      console.error("Error toggling all elements and saving state:", error);
+    }
   }
 
   const selectPage = async (page) => {
@@ -136,11 +147,11 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
       <AppLogo
         appName={appName}
       />
-      <PageSelectDropdown
+      {/* <PageSelectDropdown
         selectedPage={lastSelectedPage}
         selectPage={selectPage}
         pageLabels={pageLabels}
-      />
+      /> */}
       <div
         id="toggle-all"
         className='layout-element'
