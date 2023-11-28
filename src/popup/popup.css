@@ -1,7 +1,7 @@
 html {
   width: 18rem;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  background-color: #F1E9E9;
+  background-color: white;
 }
 
 body {
@@ -23,7 +23,7 @@ body {
   color: gray;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   body {
     background-color: #2e2e2e;
   }
@@ -44,4 +44,4 @@ body {
   .instructions {
     color: white;
   }
-}
+} */

@@ -26,6 +26,11 @@
   color: #656565;
 }
 
+.page-button-container {
+  width: max-content;
+  display: inline-block;
+}
+
 .page-button {
   padding: 0.3rem 0.4rem;
   border: 1px solid #C2C2C2;
@@ -34,7 +39,7 @@
   font-size: 0.75rem;
   width: max-content;
   border-radius: 0.3rem;
-  display: inline-block;
+  /* display: inline-block; */
   cursor: pointer;
   margin: 0.15rem;
   transition: 0.12s ease;
@@ -51,15 +56,23 @@
   transform: scale(0.96);
 }
 
-#page-button-selected {
+#page-button-clicked {
   background-color: #eb4928;
   color: white;
   border-color: #910D0D;
 }
-#page-button-selected:hover {
+#page-button-clicked:hover {
   background-color: #c33619;
 }
 
 .page-buttons {
-  margin-bottom: 1rem;
+  margin-bottom: .5rem;
+}
+
+#current-page {
+  font-size: .6rem;
+  font-weight: bold;
+  color: red;
+  text-align: center;
+  width: 100%;
 }

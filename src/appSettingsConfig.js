@@ -10,7 +10,7 @@ export const PAGES = {
   },
 };
 
-// Setting up state
+// Application Settings
 export const initialAppSettings = {
   generalSettings: {
     lastSelectedApp: APPS.YOUTUBE,
@@ -66,7 +66,7 @@ export const initialAppSettings = {
         selectors: ["#player"],
       },
       "title-and-description": {
-        label: "Title and Description",
+        label: "Title & Description",
         isShown: true,
         isLocked: false,
         selectors: ["#above-the-fold"],

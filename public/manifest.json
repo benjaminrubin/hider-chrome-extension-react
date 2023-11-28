@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Hider",
     "description": "Take back control of your focus and hide all distractions when surfing YouTube!",
-    "version": "1.0",
+    "version": "1.0.1",
     "background": {
       "service_worker": "background.js",
       "type": "module"
@@ -22,7 +22,7 @@
         "js": ["youtube-content.js"]
       }
     ],
-    "permissions": ["scripting", "activeTab", "tabs", "storage"],
+    "permissions": ["activeTab", "tabs", "storage"],
     "host_permissions": ["https://*.youtube.com/*"],
     "icons": {
       "16": "images/icon-16.png",

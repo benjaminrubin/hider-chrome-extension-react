@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Page from "./PageLayouts/Page.jsx";
-
+import PageSelectDropdown from "./PageLayouts/PageSelectDropdown.jsx";
 
 const Settings = () => {
-  const [selectedApp, setSelectedApp] = useState(null);
-  const [currentPageSettings, setCurrentPageSettings] = useState({});
-  const [isLoading, setIsLoading] = useState(true); 
+  const [appSettings, setAppSettings] = useState({});
+  const [clickedPage, setClickedPage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchSettings = async () => {
       const result = await chrome.storage.sync.get("appSettings");
       if (result.appSettings) {
-        const { lastSelectedApp, lastSelectedPage } = result.appSettings.generalSettings;
-        setSelectedApp(lastSelectedApp);
-        setCurrentPageSettings(result.appSettings[lastSelectedApp].pageSettings[lastSelectedPage]);
+        const { appSettings } = result;
+        setAppSettings(appSettings);
+        setClickedPage(appSettings.generalSettings.lastSelectedPage);
       }
       setIsLoading(false);
     };
@@ -21,11 +21,18 @@ const Settings = () => {
     fetchSettings();
   }, []);
 
-  const isPageSupported = !!currentPageSettings && !isLoading;
 
   if (isLoading) {
-    return <div style={{ color: "white", textAlign: "center", marginTop: "20px" }}>Loading...</div>;
+    return (
+      <div style={{ color: "white", textAlign: "center", marginTop: "20px" }}>
+        Loading...
+      </div>
+    );
   }
+
+  const { lastSelectedApp, lastSelectedPage } = appSettings.generalSettings;
+  const clickedPageSettings = appSettings[lastSelectedApp].pageSettings[clickedPage];
+  const isPageSupported = !!clickedPageSettings && !isLoading;
 
   if (!isPageSupported) {
     return (
@@ -36,6 +43,8 @@ const Settings = () => {
           fontWeight: "bold",
           marginTop: "20px",
           marginBottom: "20px",
+          textAlign: "center",
+          width: "100%",
         }}
       >
         This page is not supported
@@ -43,14 +52,23 @@ const Settings = () => {
     );
   }
 
+  const pageLabels = Object.entries(appSettings[lastSelectedApp].pageSettings).map(([key, { label }]) => label)
+
   return (
-    <>
-      <Page
-        appName={selectedApp}
-        pageElements={currentPageSettings.pageElements}
-        pageLayoutClassName={currentPageSettings.pageLayoutClassName}
+    <div style={{ width: "100%" }}>
+      <PageSelectDropdown
+        lastSelectedPage={lastSelectedPage}
+        clickedPage={clickedPage}
+        setClickedPage={setClickedPage}
+        pageLabels={pageLabels}
       />
-    </>
+      <Page
+        appName={lastSelectedApp}
+        clickedPage={clickedPage}
+        pageElements={clickedPageSettings.pageElements}
+        pageLayoutClassName={clickedPageSettings.pageLayoutClassName}
+      />
+    </div>
   );
 };
 

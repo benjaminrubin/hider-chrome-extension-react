@@ -7,7 +7,7 @@ import PageLayoutElement from "./PageLayoutElement.jsx";
 import AppLogo from "./AppLogo.jsx";
 
 
-const Page = ({ appName, pageElements, pageLayoutClassName }) => {
+const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
 
   const [appSettings, setAppSettings] = useState({});
   const [isLoading, setIsLoading] = useState(true); 
@@ -95,16 +95,6 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
     }
   }
 
-  const selectPage = async (page) => {
-    try {
-      const chromeStorageState = await chrome.storage.sync.get("appSettings");
-      chromeStorageState.appSettings.generalSettings.lastSelectedPage = page;
-      chrome.storage.sync.set({ appSettings: chromeStorageState.appSettings})
-    } catch (error) {
-      console.error("Error handling update:", error);
-    }
-  };
-
   const renderElements = (elementArray) => {
     return elementArray.map((elementId) => {
       const { label, isShown, isLocked } =
@@ -134,24 +124,14 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
     return <div style={{ color: "white", textAlign: "center", marginTop: "20px" }}>Loading...</div>;
   }
 
-  const { lastSelectedPage } = appSettings.generalSettings;
-  const selectedPagePath = appSettings[appName].pageSettings[lastSelectedPage].path;
-  const pageLabels = Object.entries(appSettings[appName].pageSettings).map(([key, { label }]) => label);
+  const clickedPagePath = appSettings[appName].pageSettings[clickedPage].path;
 
   const url = appSettings.generalSettings.lastSelectedApp
-    ? `${appName}.com${selectedPagePath}`
+    ? `${appName}.com${clickedPagePath}`
     : "";
   
   return (
     <>
-      <AppLogo
-        appName={appName}
-      />
-      {/* <PageSelectDropdown
-        selectedPage={lastSelectedPage}
-        selectPage={selectPage}
-        pageLabels={pageLabels}
-      /> */}
       <div
         id="toggle-all"
         className='layout-element'
@@ -159,7 +139,7 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
       >
         Toggle All Elements
       </div>
-      <h2 className='instructions'>Click on an element to toggle it</h2>
+      {/* <h2 className='instructions'>Click on an element to toggle it</h2> */}
       <WindowFrame url={url}>
         <div id='page-layout' className={pageLayoutClassName}>
           {renderElements(pageElements.mainLayout)}
