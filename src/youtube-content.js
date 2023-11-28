@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
 });
 
 const applySettings = async () => {
-  chrome.storage.local.get("appSettings", ({ appSettings }) => {
+  chrome.storage.sync.get("appSettings", ({ appSettings }) => {
     if (appSettings && appSettings.youtube && appSettings.generalSettings) {
       const { elementsSettings, pageSettings } = appSettings.youtube;
       const { lastSelectedPage } = appSettings.generalSettings;
@@ -18,6 +18,8 @@ const applySettings = async () => {
        // Combine both mainLayout and other arrays of page elements
       const relevantElements = [...(currentPage.pageElements?.mainLayout || []), ...(currentPage.pageElements?.other || [])];
 
+      console.log('relevant elements are', relevantElements)
+
       relevantElements.forEach((elementKey) => {
         if (elementsSettings[elementKey] && !elementsSettings[elementKey].isShown) {
           const selectors = elementsSettings[elementKey].selectors;
@@ -26,8 +28,13 @@ const applySettings = async () => {
               css += `${selector} { display: none !important; }\n`;
             });
           }
+          if (elementsSettings[elementKey].additionalCss) {
+            css += elementsSettings[elementKey].additionalCss;
+          }
         }
       });
+
+      console.log('css is', css)
 
       // Remove existing and add new styles
       let existingStyle = document.getElementById('youtube-custom-style');

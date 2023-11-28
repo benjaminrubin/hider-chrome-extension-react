@@ -24,7 +24,7 @@ export const initialAppSettings = {
         pageLayoutClassName: "home-page",
         pageElements: {
           mainLayout: ["navigation", "sidebar", "videos"],
-          other: ["homeShorts"],
+          other: ["homeShorts", "thumbnails"],
         },
       },
       videoPage: {
@@ -39,7 +39,7 @@ export const initialAppSettings = {
             "comments",
             "recommendations",
           ],
-          other: ["live-chat"],
+          other: ["live-chat", "thumbnails"],
         },
       },
       searchPage: {
@@ -48,7 +48,7 @@ export const initialAppSettings = {
         pageLayoutClassName: "search-page",
         pageElements: {
           mainLayout: ["navigation", "sidebar", "results"],
-          other: ["searchShorts"],
+          other: ["searchShorts", "thumbnails", "irrelevantResults"],
         },
       },
     },
@@ -75,7 +75,7 @@ export const initialAppSettings = {
         label: "Comments",
         isShown: true,
         isLocked: false,
-        selectors: ["#comments"],
+        selectors: ["ytd-comments", "ytm-comment-section-renderer"],
       },
       recommendations: {
         label: "Recs",
@@ -99,13 +99,19 @@ export const initialAppSettings = {
         label: "Shorts",
         isShown: true,
         isLocked: false,
-        selectors: [],
+        selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', '[is-shorts]'],
+      },
+      irrelevantResults: {
+        label: "Irrelevant Search Results",
+        isShown: true,
+        isLocked: false,
+        selectors: ['ytd-shelf-renderer[modern-typography]']
       },
       searchShorts: {
         label: "Shorts",
         isShown: true,
         isLocked: false,
-        selectors: [],
+        selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', '[is-shorts]', 'ytd-reel-shelf-renderer'],
       },
       sidebar: {
         label: "Sidebar",
@@ -119,6 +125,19 @@ export const initialAppSettings = {
         isLocked: false,
         selectors: ["#page-manager"],
       },
+      thumbnails: {
+        label: "Thumbnails",
+        isShown: true,
+        isLocked: false,
+        selectors: ["ytd-thumbnail", "ytd-playlist-thumbnail", "#thumbnail", "#thumbnail-container", ".shelf-skeleton", ".thumbnail", ".ytp-videowall-still-image"],
+        additionalCss: `
+        .metadata.ytd-compact-video-renderer {
+          padding-right: 0 !important;
+        }
+        .shelf-skeleton .video-skeleton {
+          margin-right: 4px;
+        }`
+      }
     },
   },
 };

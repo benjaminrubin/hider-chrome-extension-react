@@ -12,11 +12,28 @@ import { initialAppSettings, APP_MAPPINGS } from "./appSettingsConfig";
  * Installation Logic
  */
 chrome.runtime.onInstalled.addListener(async () => {
+  // for (const cs of chrome.runtime.getManifest().content_scripts) {
+  //   console.log('cs is', cs)
+  //   for (const tab of await chrome.tabs.query({ url: cs.matches })) {
+
+  //     try {
+  //       console.log('tab is', tab);
+  
+  //       chrome.scripting.executeScript({
+  //         target: {tabId: tab.id},
+  //         files: cs.js,
+  //       });
+  //     } catch (error) {
+  //       console.error("Having an error injecting into page", error);
+  //     }
+  //   }
+  // }
+
   // check if there is an appState in chrome storage
-  const result = await chrome.storage.local.get("appSettings");
+  const result = await chrome.storage.sync.get("appSettings");
   if (!result.appSettings) {
     try {
-      await chrome.storage.local.set({ appSettings: initialAppSettings });
+      await chrome.storage.sync.set({ appSettings: initialAppSettings });
     } catch (error) {
       console.log("Error in initializing settings on installation:", error);
     }
@@ -30,9 +47,9 @@ chrome.runtime.onInstalled.addListener(async () => {
  */
 chrome.tabs.onActivated.addListener(async () => {
   try {
-    const result = await chrome.storage.local.get("appSettings");
+    const result = await chrome.storage.sync.get("appSettings");
     if (!result.appSettings) {
-      await chrome.storage.local.set({ appSettings: initialAppSettings });
+      await chrome.storage.sync.set({ appSettings: initialAppSettings });
     }
 
     const { appSettings } = result;
@@ -56,7 +73,7 @@ chrome.tabs.onActivated.addListener(async () => {
       const { appSettings } = result;
       const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
       appSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
-      await chrome.storage.local.set({ appSettings });
+      await chrome.storage.sync.set({ appSettings });
     } catch (urlError) {
       console.error("Error parsing URL of active tab:", urlError);
     }
@@ -90,7 +107,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       // chrome.action.enable();
 
       // Get the current App's state
-      const result = await chrome.storage.local.get("appSettings");
+      const result = await chrome.storage.sync.get("appSettings");
       const appSettings = result.appSettings;
 
       // Update the state's last selected page to correspond to the URL's pathname
@@ -98,7 +115,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       appSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
 
       // Save the updated appState back to chrome's storage
-      await chrome.storage.local.set({ appSettings });
+      await chrome.storage.sync.set({ appSettings });
     }
   } catch (error) {
     console.log("Error when new tab is reloaded/updated:", error);
@@ -114,17 +131,13 @@ chrome.storage.onChanged.addListener(() => {
     windows.forEach((window) => {
       chrome.tabs.query({ windowId: window.id }, (tabs) => {
         tabs.forEach((tab) => {
-          try {
-            chrome.tabs.sendMessage(tab.id, "settingsUpdated");
-          } catch (error) {
-            console.error("Error sending message to tab", tab);
-
-            // Handle potential disconnections gracefully
-            // if (error.message === 'Could not establish connection. Receing end does not exist') {
-            //   console.error('Could not connect to tab with ID:', tab.id);
-            // } else {
-            //   throw error;
-            // }
+          // Verify the tab contains an injected content script
+          if (tab.url.match("https://.*.youtube.com/.*")) {
+            try {
+              chrome.tabs.sendMessage(tab.id, "settingsUpdated");
+            } catch (error) {
+              console.error("Error sending message to tab", tab);
+            }
           }
         });
       });

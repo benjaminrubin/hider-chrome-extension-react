@@ -9,7 +9,7 @@ const Settings = () => {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      const result = await chrome.storage.local.get("appSettings");
+      const result = await chrome.storage.sync.get("appSettings");
       if (result.appSettings) {
         const { lastSelectedApp, lastSelectedPage } = result.appSettings.generalSettings;
         setSelectedApp(lastSelectedApp);
@@ -31,7 +31,7 @@ const Settings = () => {
     return (
       <div
         style={{
-          color: "white",
+          color: "black",
           textAlign: "center",
           fontWeight: "bold",
           marginTop: "20px",

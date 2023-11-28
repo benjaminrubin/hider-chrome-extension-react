@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Hider React Version",
+    "name": "Hider",
     "description": "Take back control of your focus and hide all distractions when surfing YouTube!",
     "version": "1.0",
     "background": {

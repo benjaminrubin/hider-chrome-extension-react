@@ -23,7 +23,7 @@ const App = () => {
   return (
     <>
       <h4 id="version">Version: 1.0.0</h4>
-      <Logo />
+      {/* <Logo /> */}
       <Settings />
     </>
   );

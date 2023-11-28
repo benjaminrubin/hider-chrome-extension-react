@@ -13,9 +13,9 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
   const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
-    // Fetch settings from chrome.storage.local
+    // Fetch settings from chrome.storage.sync
     const fetchSettings = () => {
-      chrome.storage.local.get("appSettings", (result) => {
+      chrome.storage.sync.get("appSettings", (result) => {
         if (result.appSettings) {
           setAppSettings(result.appSettings);
         }
@@ -26,14 +26,14 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
     fetchSettings();
 
     // Listener for changes in chrome.storage
-    chrome.storage.onChanged.addListener((changes, namespace) => {
-      if ("appSettings" in changes) {
-        fetchSettings();
-      }
-    });
+    // chrome.storage.onChanged.addListener((changes, namespace) => {
+    //   if ("appSettings" in changes) {
+    //     fetchSettings();
+    //   }
+    // });
 
     return () => {
-      chrome.storage.onChanged.removeListener(fetchSettings);
+      // chrome.storage.onChanged.removeListener(fetchSettings);
     };
   }, []);
 
@@ -46,7 +46,7 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
 
       try {
         // Update chrome.storage
-        chrome.storage.local.set({ appSettings: newAppSettings });
+        chrome.storage.sync.set({ appSettings: newAppSettings });
       } catch (error) {
         console.error("Error toggling element and saving state:", error)
       }
@@ -59,7 +59,7 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
       updatedLockState;
     setAppSettings(newAppSettings);
     try {
-      chrome.storage.local.set({ appSettings: newAppSettings });
+      chrome.storage.sync.set({ appSettings: newAppSettings });
     } catch (error) {
       console.error("Error locking element and saving state:", error);
     }
@@ -89,7 +89,7 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
   
     setAppSettings(newAppSettings);
     try {
-      chrome.storage.local.set({ appSettings: newAppSettings });
+      chrome.storage.sync.set({ appSettings: newAppSettings });
     } catch (error) {
       console.error("Error toggling all elements and saving state:", error);
     }
@@ -97,9 +97,9 @@ const Page = ({ appName, pageElements, pageLayoutClassName }) => {
 
   const selectPage = async (page) => {
     try {
-      const chromeStorageState = await chrome.storage.local.get("appSettings");
+      const chromeStorageState = await chrome.storage.sync.get("appSettings");
       chromeStorageState.appSettings.generalSettings.lastSelectedPage = page;
-      chrome.storage.local.set({ appSettings: chromeStorageState.appSettings})
+      chrome.storage.sync.set({ appSettings: chromeStorageState.appSettings})
     } catch (error) {
       console.error("Error handling update:", error);
     }
