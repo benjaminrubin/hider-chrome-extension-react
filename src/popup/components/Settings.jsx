@@ -4,7 +4,7 @@ import PageSelectDropdown from "./PageLayouts/PageSelectDropdown.jsx";
 
 const Settings = () => {
   const [appSettings, setAppSettings] = useState({});
-  const [clickedPage, setClickedPage] = useState('');
+  const [clickedPage, setClickedPage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +21,6 @@ const Settings = () => {
     fetchSettings();
   }, []);
 
-
   if (isLoading) {
     return (
       <div style={{ color: "white", textAlign: "center", marginTop: "20px" }}>
@@ -30,11 +29,13 @@ const Settings = () => {
     );
   }
 
+  const { isAppSupported } = appSettings.generalSettings;
   const { lastSelectedApp, lastSelectedPage } = appSettings.generalSettings;
-  const clickedPageSettings = appSettings[lastSelectedApp].pageSettings[clickedPage];
-  const isPageSupported = !!clickedPageSettings && !isLoading;
+  const clickedPageSettings =
+    appSettings[lastSelectedApp].pageSettings[clickedPage];
+  const isPageSupported = !!clickedPageSettings;
 
-  if (!isPageSupported) {
+  if (!isAppSupported || !isPageSupported) {
     return (
       <div
         style={{
@@ -43,16 +44,17 @@ const Settings = () => {
           fontWeight: "bold",
           marginTop: "20px",
           marginBottom: "20px",
-          textAlign: "center",
-          width: "100%",
+          width: '100%'
         }}
       >
-        This page is not supported
+        {isAppSupported ? "This page is not supported" : "App is not supported"}
       </div>
     );
   }
 
-  const pageLabels = Object.entries(appSettings[lastSelectedApp].pageSettings).map(([key, { label }]) => label)
+  const pageLabels = Object.entries(
+    appSettings[lastSelectedApp].pageSettings
+  ).map(([key, { label }]) => label);
 
   return (
     <div style={{ width: "100%" }}>

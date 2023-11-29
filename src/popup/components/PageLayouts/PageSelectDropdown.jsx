@@ -33,7 +33,7 @@ const PageSelectDropdown = ({ lastSelectedPage, clickedPage, setClickedPage, pag
             className='page-button-container'
             key={pageLabel}
           >
-            {isCurrentPage && <div id='current-page'>▼</div>}
+            {isCurrentPage && <div id='current-page'>Current ↓</div>}
             <div
               id={clickedId}
               className='page-button'

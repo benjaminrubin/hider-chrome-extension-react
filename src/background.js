@@ -21,6 +21,7 @@ export const PAGES = {
 // Setting up state
 export const initialAppSettings = {
   generalSettings: {
+    isAppSupported: true,
     lastSelectedApp: APPS.YOUTUBE,
     lastSelectedPage: PAGES[APPS.YOUTUBE].HOME_PAGE,
   },
@@ -107,19 +108,24 @@ export const initialAppSettings = {
         label: "Shorts",
         isShown: true,
         isLocked: false,
-        selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', '[is-shorts]'],
+        selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', "[is-shorts]"],
       },
       irrelevantResults: {
         label: "Irrelevant Search Results",
         isShown: true,
         isLocked: false,
-        selectors: ['ytd-shelf-renderer[modern-typography]']
+        selectors: ["ytd-shelf-renderer[modern-typography]"],
       },
       searchShorts: {
         label: "Shorts",
         isShown: true,
         isLocked: false,
-        selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', '[is-shorts]', 'ytd-reel-shelf-renderer'],
+        selectors: [
+          '[aria-label="Shorts"]',
+          '[title="Shorts"]',
+          "[is-shorts]",
+          "ytd-reel-shelf-renderer",
+        ],
       },
       sidebar: {
         label: "Sidebar",
@@ -137,15 +143,23 @@ export const initialAppSettings = {
         label: "Thumbnails",
         isShown: true,
         isLocked: false,
-        selectors: ["ytd-thumbnail", "ytd-playlist-thumbnail", "#thumbnail", "#thumbnail-container", ".shelf-skeleton", ".thumbnail", ".ytp-videowall-still-image"],
+        selectors: [
+          "ytd-thumbnail",
+          "ytd-playlist-thumbnail",
+          "#thumbnail",
+          "#thumbnail-container",
+          ".shelf-skeleton",
+          ".thumbnail",
+          ".ytp-videowall-still-image",
+        ],
         additionalCss: `
         .metadata.ytd-compact-video-renderer {
           padding-right: 0 !important;
         }
         .shelf-skeleton .video-skeleton {
           margin-right: 4px;
-        }`
-      }
+        }`,
+      },
     },
   },
 };
@@ -178,7 +192,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 
   //     try {
   //       console.log('tab is', tab);
-  
+
   //       chrome.scripting.executeScript({
   //         target: {tabId: tab.id},
   //         files: cs.js,
@@ -227,12 +241,12 @@ chrome.tabs.onActivated.addListener(async () => {
 
       // If the URL does not correspond to a supported app
       if (!app) {
-        console.log("Active tab is not a supported app:", hostname);
-        return;
+        appSettings.generalSettings.isAppSupported = false;
+      } else {
+        appSettings.generalSettings.isAppSupported = true;
+        const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
+        appSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
       }
-      const { appSettings } = result;
-      const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
-      appSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
       await chrome.storage.sync.set({ appSettings });
     } catch (urlError) {
       console.error("Error parsing URL of active tab:", urlError);
@@ -246,39 +260,46 @@ chrome.tabs.onActivated.addListener(async () => {
  * When a tab is reloaded, update the lastSelectedPage
  */
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  try {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (changeInfo.status === "complete") {
+    try {
+      const tabs = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
 
-    // wait for tab to finish loading
-    if (changeInfo.status === "complete") {
-      // Skip if not in a supported URL or the app does not match the URL
-      const currentURL = tabs[0].url;
-      const url = new URL(currentURL);
+      // wait for tab to finish loading
+      if (changeInfo.status === "complete") {
+        // Skip if not in a supported URL or the app does not match the URL
+        const url = new URL(tab.url);
+        const hostname = url.hostname;
+        const pathname = url.pathname;
 
-      const hostname = url.hostname;
-      const pathname = url.pathname;
-      const app = APP_MAPPINGS[hostname] ? APP_MAPPINGS[hostname].app : null;
+        // Check if the URL corresponds to a supported app
+        const app = APP_MAPPINGS[hostname] ? APP_MAPPINGS[hostname].app : null;
 
-      // If the URL does not correspond to a supported app
-      if (!app) {
-        // chrome.action.disable(); TODO: figure this one out
-        return;
+        // Get the current appSettings state
+        const result = await chrome.storage.sync.get("appSettings");
+        const appSettings = result.appSettings || initialAppSettings;
+
+        // If the URL does not correspond to a supported app
+        if (!app) {
+          appSettings.generalSettings.isAppSupported = false;
+        } else {
+          appSettings.generalSettings.isAppSupported = true;
+
+          // Update the state's last selected page to correspond to the URL's pathname
+          const updatedLastSelectedPage =
+            APP_MAPPINGS[hostname].pages[pathname];
+          appSettings.generalSettings.lastSelectedPage =
+            updatedLastSelectedPage;
+        }
+
+        // Save the updated appState back to chrome's storage
+        await chrome.storage.sync.set({ appSettings });
       }
-      // chrome.action.enable();
-
-      // Get the current App's state
-      const result = await chrome.storage.sync.get("appSettings");
-      const appSettings = result.appSettings;
-
-      // Update the state's last selected page to correspond to the URL's pathname
-      const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
-      appSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
-
-      // Save the updated appState back to chrome's storage
-      await chrome.storage.sync.set({ appSettings });
+    } catch (error) {
+      console.log("Error when new tab is reloaded/updated:", error);
     }
-  } catch (error) {
-    console.log("Error when new tab is reloaded/updated:", error);
   }
 });
 

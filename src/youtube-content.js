@@ -18,8 +18,6 @@ const applySettings = async () => {
        // Combine both mainLayout and other arrays of page elements
       const relevantElements = [...(currentPage.pageElements?.mainLayout || []), ...(currentPage.pageElements?.other || [])];
 
-      console.log('relevant elements are', relevantElements)
-
       relevantElements.forEach((elementKey) => {
         if (elementsSettings[elementKey] && !elementsSettings[elementKey].isShown) {
           const selectors = elementsSettings[elementKey].selectors;
@@ -33,8 +31,6 @@ const applySettings = async () => {
           }
         }
       });
-
-      console.log('css is', css)
 
       // Remove existing and add new styles
       let existingStyle = document.getElementById('youtube-custom-style');

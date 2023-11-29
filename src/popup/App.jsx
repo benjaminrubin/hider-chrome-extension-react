@@ -18,19 +18,9 @@ export const APPS = {
 };
 
 const App = () => {
-  const [extensionVersion, setExtensionVersion] = useState('');
-
-  useEffect(() => {
-    const manifest = chrome.runtime.getManifest();
-    setExtensionVersion(manifest.version);
-  }, []);
-
-
-  const SelectedAppComponent = APPS[APP_NAMES.YOUTUBE].COMPONENT;
-
   return (
     <>
-      <h4 id="version">Hider Version {extensionVersion}</h4>
+      <h4 id="version">Version 1.0.1</h4>
       <Logo />
       <div style={{display: 'flex', flexDirection: 'row', gap: '10px'}}>
         {/* <Sidebar /> */}
