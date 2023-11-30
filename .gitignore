@@ -3,3 +3,6 @@
 
 # production files
 /dist
+
+# unnecessary metadata files
+.DS_Store
