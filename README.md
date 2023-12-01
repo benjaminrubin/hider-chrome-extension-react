@@ -5,6 +5,8 @@ Take back control of your focus and hide all distractions when surfing YouTube!
 
 Download this extension on Google Chrome: [Chrome Extension Download Page](https://chromewebstore.google.com/detail/hider/dnnpgmbhdojpjkpeeafgdelohfhbpiga?hl=en)
 
+<img src="hider2.png">
+
 ## How does it work? 
 Hider allows you to:
 1. Easily hide different page elements on YouTube while you browse
@@ -37,8 +39,6 @@ Search Results Page:
 - Irrelevant Search Results ("People Also Watched", "For You" and more)
 
 
-
-<img src="hider2.png">
 
 
 ### Designed and developed by Benjamin Floyd Rubin
