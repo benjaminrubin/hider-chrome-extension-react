@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Hider",
+    "name": "Hider - Hide Distractions on YouTube",
     "description": "Take back control of your focus and hide all distractions when surfing YouTube!",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "background": {
       "service_worker": "background.js",
       "type": "module"
