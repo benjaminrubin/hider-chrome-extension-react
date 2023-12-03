@@ -6,3 +6,6 @@
 
 # unnecessary metadata files
 .DS_Store
+
+# Zip file
+dist.zip
