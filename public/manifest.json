@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Hide Thumbnails, Shorts, and more on YouTube",
-    "description": "Take back control of your focus and hide all distractions when surfing YouTube!",
+    "description": "Take back control of your focus and hide all distractions when surfing YouTube! This includes thumbnails, shorts, irrelevant search results, and any other major elements on the page (such as live chats, recommendations and more).",
     "version": "1.0.4",
     "background": {
       "service_worker": "background.js",
