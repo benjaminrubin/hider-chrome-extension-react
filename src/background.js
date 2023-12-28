@@ -303,6 +303,48 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   }
 });
 
+
+/**
+ * When clicking on the chrome action icon, make sure
+ * to update the currently selected app
+ */
+chrome.action.onClicked.addListener(async (tabId, changeInfo, tab) => {
+  try {
+    const result = await chrome.storage.sync.get("appSettings");
+    if (!result.appSettings) {
+      await chrome.storage.sync.set({ appSettings: initialAppSettings });
+    }
+
+    const { appSettings } = result;
+
+    // Get the active tab
+    const [activeTab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    if (!activeTab || !activeTab.url) return;
+
+    try {
+      const { hostname, pathname } = new URL(activeTab.url);
+      const app = APP_MAPPINGS[hostname] ? APP_MAPPINGS[hostname].app : null;
+
+      // If the URL does not correspond to a supported app
+      if (!app) {
+        appSettings.generalSettings.isAppSupported = false;
+      } else {
+        appSettings.generalSettings.isAppSupported = true;
+        const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
+        appSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
+      }
+      await chrome.storage.sync.set({ appSettings });
+    } catch (urlError) {
+      console.error("Error parsing URL of current tab:", urlError);
+    }
+  } catch (error) {
+    console.log("Error when action icon is clicked:", error);
+  }
+});
+
 /**
  * Most important codeblock of background.js
  * Applying settings to all tabs anytime the settings within storage changes
