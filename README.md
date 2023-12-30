@@ -1,5 +1,4 @@
 # Hider Chrome Extension
-### Hider v1.0.2
 
 Take back control of your focus and hide all distractions when surfing YouTube! 
 
