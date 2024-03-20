@@ -23,6 +23,21 @@ body {
   color: gray;
 }
 
+#leave-review {
+  font-size: 0.5rem;
+  border: 1px solid red;
+  color: white;
+  border-radius: 4px;
+  padding: 1px 3px;
+  margin: 0;
+  background: red;
+}
+
+#leave-review:hover {
+  background: #9E0000;
+  cursor: pointer;
+}
+
 /* @media (prefers-color-scheme: dark) {
   body {
     background-color: #2e2e2e;

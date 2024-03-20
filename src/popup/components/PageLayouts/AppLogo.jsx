@@ -5,6 +5,12 @@ import linkedinLogo from '../../../../public/images/linkedin-logo.png';
 import facebookLogo from '../../../../public/images/facebook-logo.png';
 import twitterLogo from '../../../../public/images/twitter-logo.png';
 
+
+/**
+ * View the popup window by typing:
+ * chrome-extension:<id of chrome extension>/popup.html
+ */
+
 const AppLogo = ({ appName }) => {
 
   const logos = {
