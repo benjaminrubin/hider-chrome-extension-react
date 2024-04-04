@@ -205,7 +205,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 
   // check if there is an appState in chrome storage
   const result = await chrome.storage.sync.get("appSettings");
-  if (!result.appSettings) {
+  if (!result.appSettings || Object.getOwnPropertyNames(result.appSettings).length === 0) {
     try {
       await chrome.storage.sync.set({ appSettings: initialAppSettings });
     } catch (error) {
