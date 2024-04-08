@@ -8,6 +8,8 @@ const camelize = (str) => {
   // First, check if the input is already in camelCase. If it is, return as is.
   // A simple regex to check for camelCase. This regex will match if there are no hyphens
   // and if there's at least one lowercase letter followed by an uppercase letter.
+  if (!str) return '';
+
   if (/^[^-]+([a-z][A-Z]|[A-Z][a-z])/.test(str)) {
     return str;
   }
@@ -52,28 +54,28 @@ const Settings = () => {
     );
   }
 
-  const { isAppSupported } = appSettings.generalSettings;
+  // const { isAppSupported } = appSettings.generalSettings;
   const { lastSelectedApp, lastSelectedPage } = appSettings.generalSettings;
   const clickedPageSettings =
     appSettings[lastSelectedApp].pageSettings[clickedPage];
   const isPageSupported = !!clickedPageSettings;
 
-  // if (!isAppSupported || !isPageSupported) {
-  //   return (
-  //     <div
-  //       style={{
-  //         color: "black",
-  //         textAlign: "center",
-  //         fontWeight: "bold",
-  //         marginTop: "20px",
-  //         marginBottom: "20px",
-  //         width: '100%'
-  //       }}
-  //     >
-  //       {isAppSupported ? "This page is not supported" : "App is not supported"}
-  //     </div>
-  //   );
-  // }
+  if (!isPageSupported) {
+    return (
+      <div
+        style={{
+          color: "black",
+          textAlign: "center",
+          fontWeight: "bold",
+          marginTop: "20px",
+          marginBottom: "20px",
+          width: '100%'
+        }}
+      >
+        This page is not supported
+      </div>
+    );
+  }
 
   const pageLabels = Object.entries(
     appSettings[lastSelectedApp].pageSettings

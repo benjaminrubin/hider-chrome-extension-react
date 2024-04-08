@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Hide Thumbnails, Shorts, and more on YouTube",
     "description": "Enhance focus on YouTube by hiding distractions like thumbnails, shorts, irrelevant results, live chats, and recommendations.",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "background": {
       "service_worker": "background.js",
       "type": "module"
