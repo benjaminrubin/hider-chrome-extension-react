@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./WindowFrame.css";
 import "./Layouts.css";
-import PageSelectDropdown from "./PageSelectDropdown.jsx";
 import { WindowFrame } from "./WindowFrame.jsx";
 import PageLayoutElement from "./PageLayoutElement.jsx";
-import AppLogo from "./AppLogo.jsx";
-
 
 const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
-
   const [appSettings, setAppSettings] = useState({});
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Fetch settings from chrome.storage.sync
@@ -24,19 +20,15 @@ const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
     };
 
     fetchSettings();
-
-    // Listener for changes in chrome.storage
-    // chrome.storage.onChanged.addListener((changes, namespace) => {
-    //   if ("appSettings" in changes) {
-    //     fetchSettings();
-    //   }
-    // });
-
-    return () => {
-      // chrome.storage.onChanged.removeListener(fetchSettings);
-    };
   }, []);
 
+  /**
+   * Toggles element both in popup and current tab.
+   * 
+   * @param {string} element 
+   * @param {boolean} isLocked 
+   * @param {boolean} updatedVisibility 
+   */
   const toggleElement = (element, isLocked, updatedVisibility) => {
     if (!isLocked) {
       const newAppSettings = { ...appSettings };
@@ -45,14 +37,20 @@ const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
       setAppSettings(newAppSettings);
 
       try {
-        // Update chrome.storage
         chrome.storage.sync.set({ appSettings: newAppSettings });
       } catch (error) {
-        console.error("Error toggling element and saving state:", error)
+        console.error("Error toggling element and saving state:", error);
       }
     }
   };
 
+
+  /**
+   * Toggles a UI's lock state (locked or unlocked)
+   * 
+   * @param {string} element 
+   * @param {boolean} updatedLockState 
+   */
   const toggleLock = (element, updatedLockState) => {
     const newAppSettings = { ...appSettings };
     newAppSettings[appName].elementsSettings[element].isLocked =
@@ -64,36 +62,48 @@ const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
       console.error("Error locking element and saving state:", error);
     }
   };
-
+  
+  /**
+   * Toggles all elements in a given page.
+   * If there is at least one unlocked element that is displayed,
+   * this function will default to hiding all remaining elements.
+   * Otherwise, it will show all elements.
+   * 
+   */
   const toggleAllElements = () => {
     const newAppSettings = { ...appSettings };
 
     // Combine both mainLayout and other arrays
-    const allElementsToToggle = [...pageElements.mainLayout, ...pageElements.other];
-  
+    const allElementsToToggle = [
+      ...pageElements.mainLayout,
+      ...pageElements.other,
+    ];
+
     // Check if there is at least one unlocked element that is displayed
     const anyUnlockedDisplayed = allElementsToToggle.some((elementId) => {
       const element = newAppSettings[appName].elementsSettings[elementId];
       return !element.isLocked && element.isShown;
     });
-  
+
     // Determine the desired state: hide if any unlocked element is displayed, otherwise show
     const desiredState = !anyUnlockedDisplayed;
-  
+
     // Toggle all elements to the desired state
     allElementsToToggle.forEach((elementId) => {
       if (!newAppSettings[appName].elementsSettings[elementId].isLocked) {
-        newAppSettings[appName].elementsSettings[elementId].isShown = desiredState;
+        newAppSettings[appName].elementsSettings[elementId].isShown =
+          desiredState;
       }
     });
-  
+
     setAppSettings(newAppSettings);
+
     try {
       chrome.storage.sync.set({ appSettings: newAppSettings });
     } catch (error) {
       console.error("Error toggling all elements and saving state:", error);
     }
-  }
+  };
 
   const renderElements = (elementArray) => {
     return elementArray.map((elementId) => {
@@ -119,27 +129,31 @@ const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
     });
   };
 
-
   if (isLoading) {
-    return <div style={{ color: "white", textAlign: "center", marginTop: "20px" }}>Loading...</div>;
+    return (
+      <div style={{ color: "white", textAlign: "center", marginTop: "20px" }}>
+        Loading...
+      </div>
+    );
   }
 
   const clickedPagePath = appSettings[appName].pageSettings[clickedPage].path;
 
+  // Last Selected App remains YouTube for now
+  // This url is what is displayed in the browser UI's address bar (i.e. "www.youtube.com/watch")
   const url = appSettings.generalSettings.lastSelectedApp
     ? `${appName}.com${clickedPagePath}`
     : "";
-  
+
   return (
     <>
       <div
-        id="toggle-all"
+        id='toggle-all'
         className='layout-element'
         onClick={toggleAllElements}
       >
         Toggle All Elements
       </div>
-      {/* <h2 className='instructions'>Click on an element to toggle it</h2> */}
       <WindowFrame url={url}>
         <div id='page-layout' className={pageLayoutClassName}>
           {renderElements(pageElements.mainLayout)}

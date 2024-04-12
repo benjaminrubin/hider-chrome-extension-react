@@ -3,17 +3,17 @@ import "./popup.css";
 import Logo from "./Logo.jsx";
 import { APP_NAMES } from "../GlobalUtils.js";
 import Settings from "./components/Settings.jsx";
-import Sidebar from "./Sidebar.jsx";
 
 export const APPS = {
   [APP_NAMES.YOUTUBE]: {
     LABEL: "YouTube",
     COMPONENT: Settings,
   },
-  [APP_NAMES.TIKTOK]: {
-    LABEL: "TikTok",
-    COMPONENT: null,
-  },
+  // Example for when I expand to other apps
+  // [APP_NAMES.TIKTOK]: {
+  //   LABEL: "TikTok",
+  //   COMPONENT: null,
+  // },
 };
 
 const App = () => {
@@ -23,9 +23,6 @@ const App = () => {
   useEffect(() => {
     const manifest = chrome.runtime.getManifest();
     setVersion(manifest.version);
-
-    // Send a message to the background.js to re-determine the
-    // current tab
   }, []);
 
   return (
@@ -35,7 +32,7 @@ const App = () => {
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
-          marginBottom: '15px'
+          marginBottom: "15px",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column" }}>

@@ -18,10 +18,10 @@ export const PAGES = {
   },
 };
 
-// Setting up state
+// The Master App Settings
 export const initialAppSettings = {
   generalSettings: {
-    isAppSupported: true,
+    isAppSupported: true, // <-- TODO: Remove this
     lastSelectedApp: APPS.YOUTUBE,
     lastSelectedPage: PAGES[APPS.YOUTUBE].HOME_PAGE,
   },
@@ -48,7 +48,11 @@ export const initialAppSettings = {
             "comments",
             "recommendations",
           ],
-          other: ["live-chat", "thumbnails"],
+          other: [
+            "live-chat",
+            "thumbnails",
+            "end-cards"
+          ],
         },
       },
       searchPage: {
@@ -109,6 +113,12 @@ export const initialAppSettings = {
         isShown: true,
         isLocked: false,
         selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', "[is-shorts]"],
+      },
+      "end-cards": {
+        label: "Video End Cards",
+        isShown: true,
+        isLocked: false,
+        selectors: [".ytp-ce-element"],
       },
       irrelevantResults: {
         label: "Irrelevant Search Results",
@@ -186,26 +196,13 @@ export const APP_MAPPINGS = {
  * Installation Logic
  */
 chrome.runtime.onInstalled.addListener(async () => {
-  // for (const cs of chrome.runtime.getManifest().content_scripts) {
-  //   console.log('cs is', cs)
-  //   for (const tab of await chrome.tabs.query({ url: cs.matches })) {
-
-  //     try {
-  //       console.log('tab is', tab);
-
-  //       chrome.scripting.executeScript({
-  //         target: {tabId: tab.id},
-  //         files: cs.js,
-  //       });
-  //     } catch (error) {
-  //       console.error("Having an error injecting into page", error);
-  //     }
-  //   }
-  // }
-
+  
   // check if there is an appState in chrome storage
   const result = await chrome.storage.sync.get("appSettings");
-  if (!result.appSettings || Object.getOwnPropertyNames(result.appSettings).length === 0) {
+  if (
+    !result.appSettings ||
+    Object.getOwnPropertyNames(result.appSettings).length === 0
+  ) {
     try {
       await chrome.storage.sync.set({ appSettings: initialAppSettings });
     } catch (error) {
@@ -233,6 +230,8 @@ chrome.tabs.onActivated.addListener(async () => {
       active: true,
       currentWindow: true,
     });
+
+    // If there is no active tab, or this is not a regular webpage return
     if (!activeTab || !activeTab.url) return;
 
     try {
@@ -303,7 +302,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   }
 });
 
-
 /**
  * When clicking on the chrome action icon, make sure
  * to update the currently selected app
@@ -316,6 +314,8 @@ chrome.action.onClicked.addListener(async (tabId, changeInfo, tab) => {
     }
 
     const { appSettings } = result;
+
+    const newAppSettings = { ...appSettings };
 
     // Get the active tab
     const [activeTab] = await chrome.tabs.query({
@@ -330,13 +330,13 @@ chrome.action.onClicked.addListener(async (tabId, changeInfo, tab) => {
 
       // If the URL does not correspond to a supported app
       if (!app) {
-        appSettings.generalSettings.isAppSupported = false;
+        newAppSettings.generalSettings.isAppSupported = false;
       } else {
-        appSettings.generalSettings.isAppSupported = true;
+        newAppSettings.generalSettings.isAppSupported = true;
         const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
-        appSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
+        newAppSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
       }
-      await chrome.storage.sync.set({ appSettings });
+      await chrome.storage.sync.set({ appSettings: newAppSettings });
     } catch (urlError) {
       console.error("Error parsing URL of current tab:", urlError);
     }

@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import Page from "./PageLayouts/Page.jsx";
 import PageSelectDropdown from "./PageLayouts/PageSelectDropdown.jsx";
 
-
-
+/**
+ * Converts a string from hyphenated or space-separated format to camelCase.
+ * If the string is already in camelCase or if the input is empty,
+ * it returns the string as is or an empty string, respectively.
+ *
+ * @param {*} str The string to convert.
+ * @returns The camelCased string or an empty string if input is not provided.
+ */
 const camelize = (str) => {
   // First, check if the input is already in camelCase. If it is, return as is.
   // A simple regex to check for camelCase. This regex will match if there are no hyphens
@@ -16,13 +22,10 @@ const camelize = (str) => {
 
   // If the input is not in camelCase, convert hyphenated or space-separated strings to camelCase
   return str
-    // Split the string into words separated by hyphens or spaces.
     .split(/-|\s+/)
-    // Transform each word: the first word is made lowercase; subsequent words are capitalized.
     .map((word, index) => 
       index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     )
-    // Join the transformed words back together.
     .join('');
 };
 
@@ -54,10 +57,9 @@ const Settings = () => {
     );
   }
 
-  // const { isAppSupported } = appSettings.generalSettings;
   const { lastSelectedApp, lastSelectedPage } = appSettings.generalSettings;
   const clickedPageSettings =
-    appSettings[lastSelectedApp].pageSettings[clickedPage];
+    appSettings[lastSelectedApp]?.pageSettings[clickedPage];
   const isPageSupported = !!clickedPageSettings;
 
   if (!isPageSupported) {
