@@ -1,6 +1,11 @@
 import React from "react";
 import LockImage from "../../../../public/images/lock.png";
-import { ELEMENT_STATE } from "../../../GlobalUtils.js";
+
+
+const ELEMENT_STATE = {
+  DISPLAYED: "displayed",
+  HIDDEN: "hidden",
+};
 
 const PageLayoutElement = ({
   id,

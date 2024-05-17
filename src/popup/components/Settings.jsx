@@ -62,22 +62,22 @@ const Settings = () => {
     appSettings[lastSelectedApp]?.pageSettings[clickedPage];
   const isPageSupported = !!clickedPageSettings;
 
-  if (!isPageSupported) {
-    return (
-      <div
-        style={{
-          color: "black",
-          textAlign: "center",
-          fontWeight: "bold",
-          marginTop: "20px",
-          marginBottom: "20px",
-          width: '100%'
-        }}
-      >
-        This page is not supported
-      </div>
-    );
-  }
+  // if (!isPageSupported) {
+  //   return (
+  //     <div
+  //       style={{
+  //         color: "black",
+  //         textAlign: "center",
+  //         fontWeight: "bold",
+  //         marginTop: "20px",
+  //         marginBottom: "20px",
+  //         width: '100%'
+  //       }}
+  //     >
+  //       This page is not supported
+  //     </div>
+  //   );
+  // }
 
   const pageLabels = Object.entries(
     appSettings[lastSelectedApp].pageSettings

@@ -39,7 +39,12 @@ export const initialAppSettings = {
             "comments",
             "recommendations",
           ],
-          other: ["live-chat", "thumbnails"],
+          other: [
+            "live-chat",
+            "videoShorts",
+            "thumbnails",
+            "end-cards"
+          ],
         },
       },
       searchPage: {
@@ -94,6 +99,12 @@ export const initialAppSettings = {
         isShown: true,
         isLocked: false,
         selectors: ["#contents", "#header"],
+      },
+      videoShorts: {
+        label: "Shorts",
+        isShown: true,
+        isLocked: false,
+        selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', "[is-shorts]"],
       },
       homeShorts: {
         label: "Shorts",

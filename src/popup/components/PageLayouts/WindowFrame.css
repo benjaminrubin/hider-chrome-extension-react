@@ -1,5 +1,6 @@
 #window-frame-video {
     width: 100%;
+    max-width: 18rem;
     /* margin: 0.5rem; */
     margin-bottom: 0.5rem;
     padding: 0 0.3rem 0.3rem 0.3rem;

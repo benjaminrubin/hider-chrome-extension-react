@@ -2,7 +2,6 @@ import React from "react";
 import { render, waitFor, screen, act } from "@testing-library/react";
 import Settings from "../components/Settings";
 import "@testing-library/jest-dom";
-// import { appSettings } from "@settings"; // Using virtual module path
 
  const APPS = {
   YOUTUBE: "youtube",

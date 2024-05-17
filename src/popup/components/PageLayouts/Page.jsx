@@ -24,10 +24,10 @@ const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
 
   /**
    * Toggles element both in popup and current tab.
-   * 
-   * @param {string} element 
-   * @param {boolean} isLocked 
-   * @param {boolean} updatedVisibility 
+   *
+   * @param {string} element
+   * @param {boolean} isLocked
+   * @param {boolean} updatedVisibility
    */
   const toggleElement = (element, isLocked, updatedVisibility) => {
     if (!isLocked) {
@@ -44,12 +44,11 @@ const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
     }
   };
 
-
   /**
    * Toggles a UI's lock state (locked or unlocked)
-   * 
-   * @param {string} element 
-   * @param {boolean} updatedLockState 
+   *
+   * @param {string} element
+   * @param {boolean} updatedLockState
    */
   const toggleLock = (element, updatedLockState) => {
     const newAppSettings = { ...appSettings };
@@ -62,13 +61,13 @@ const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
       console.error("Error locking element and saving state:", error);
     }
   };
-  
+
   /**
    * Toggles all elements in a given page.
    * If there is at least one unlocked element that is displayed,
    * this function will default to hiding all remaining elements.
    * Otherwise, it will show all elements.
-   * 
+   *
    */
   const toggleAllElements = () => {
     const newAppSettings = { ...appSettings };
@@ -159,8 +158,10 @@ const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
           {renderElements(pageElements.mainLayout)}
         </div>
       </WindowFrame>
-      <h2 className='instructions'>Other elements</h2>
-      {renderElements(pageElements.other)}
+      <div>
+        {/* <h2 className='instructions'>Other elements</h2> */}
+        {renderElements(pageElements.other)}
+      </div>
     </>
   );
 };

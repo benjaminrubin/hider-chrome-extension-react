@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./popup.css";
 import Logo from "./Logo.jsx";
-import { APP_NAMES } from "../GlobalUtils.js";
 import Settings from "./components/Settings.jsx";
-
-export const APPS = {
-  [APP_NAMES.YOUTUBE]: {
-    LABEL: "YouTube",
-    COMPONENT: Settings,
-  },
-  // Example for when I expand to other apps
-  // [APP_NAMES.TIKTOK]: {
-  //   LABEL: "TikTok",
-  //   COMPONENT: null,
-  // },
-};
 
 const App = () => {
   const [version, setVersion] = useState("");
@@ -32,7 +19,7 @@ const App = () => {
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
-          marginBottom: "15px",
+          marginBottom: "2px",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column" }}>

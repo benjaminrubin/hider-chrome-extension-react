@@ -48,11 +48,7 @@ export const initialAppSettings = {
             "comments",
             "recommendations",
           ],
-          other: [
-            "live-chat",
-            "thumbnails",
-            "end-cards"
-          ],
+          other: ["live-chat", "videoShorts", "thumbnails", "end-cards"],
         },
       },
       searchPage: {
@@ -107,6 +103,17 @@ export const initialAppSettings = {
         isShown: true,
         isLocked: false,
         selectors: ["#contents", "#header"],
+      },
+      videoShorts: {
+        label: "Shorts",
+        isShown: true,
+        isLocked: false,
+        selectors: [
+          '[aria-label="Shorts"]',
+          '[title="Shorts"]',
+          "[is-shorts]",
+          "ytd-reel-shelf-renderer",
+        ],
       },
       homeShorts: {
         label: "Shorts",
@@ -196,19 +203,36 @@ export const APP_MAPPINGS = {
  * Installation Logic
  */
 chrome.runtime.onInstalled.addListener(async () => {
-  
-  // check if there is an appState in chrome storage
-  const result = await chrome.storage.sync.get("appSettings");
-  if (
-    !result.appSettings ||
-    Object.getOwnPropertyNames(result.appSettings).length === 0
-  ) {
-    try {
+  try {
+    // check if there is an appState in chrome storage
+    const result = await chrome.storage.sync.get("appSettings");
+
+    if (result.appSettings) {
+      const existingSettings = result.appSettings;
+      const mergedSettings = { ...initialAppSettings, ...existingSettings };
+
+      // Recursively merge nested objects
+      const deepMerge = (target, source) => {
+        for (const key in source) {
+          if (source[key] instanceof Object) {
+            Object.assign(source[key], deepMerge(target[key], source[key]));
+          }
+        }
+        Object.assign(target || {}, source);
+        return target;
+      };
+
+      const finalSettings = deepMerge(initialAppSettings, mergedSettings);
+
+      await chrome.storage.sync.set({ appSettings: finalSettings });
+    } else {
+      // If there are no existing settings, set the initial settings
       await chrome.storage.sync.set({ appSettings: initialAppSettings });
-    } catch (error) {
-      console.log("Error in initializing settings on installation:", error);
     }
+  } catch (error) {
+    console.log("Error in initializing settings on installation:", error);
   }
+
 });
 
 /**
@@ -334,7 +358,8 @@ chrome.action.onClicked.addListener(async (tabId, changeInfo, tab) => {
       } else {
         newAppSettings.generalSettings.isAppSupported = true;
         const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
-        newAppSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
+        newAppSettings.generalSettings.lastSelectedPage =
+          updatedLastSelectedPage;
       }
       await chrome.storage.sync.set({ appSettings: newAppSettings });
     } catch (urlError) {
