@@ -3,8 +3,9 @@ import "./WindowFrame.css";
 import "./Layouts.css";
 import { WindowFrame } from "./WindowFrame.jsx";
 import PageLayoutElement from "./PageLayoutElement.jsx";
+import { APPS } from "../../../background.js";
 
-const Page = ({ appName, clickedPage, pageElements, pageLayoutClassName }) => {
+const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutClassName }) => {
   const [appSettings, setAppSettings] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 

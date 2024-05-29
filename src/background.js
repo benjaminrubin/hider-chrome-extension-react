@@ -18,10 +18,12 @@ export const PAGES = {
   },
 };
 
+export const PAGE_NOT_SUPPORTED = 'page-not-supported';
+
 // The Master App Settings
 export const initialAppSettings = {
   generalSettings: {
-    isAppSupported: true, // <-- TODO: Remove this
+    isAppSupported: true, // <-- TODO: Incorporate logic for this
     lastSelectedApp: APPS.YOUTUBE,
     lastSelectedPage: PAGES[APPS.YOUTUBE].HOME_PAGE,
   },
@@ -33,7 +35,7 @@ export const initialAppSettings = {
         pageLayoutClassName: "home-page",
         pageElements: {
           mainLayout: ["navigation", "sidebar", "videos"],
-          other: ["homeShorts", "thumbnails"],
+          other: ["homeShorts", "thumbnails", "youtubePlayables"],
         },
       },
       videoPage: {
@@ -131,7 +133,7 @@ export const initialAppSettings = {
         label: "Irrelevant Search Results",
         isShown: true,
         isLocked: false,
-        selectors: ["ytd-shelf-renderer[modern-typography]"],
+        selectors: ["ytd-shelf-renderer[modern-typography]", "ytd-horizontal-card-list-renderer"],
       },
       searchShorts: {
         label: "Shorts",
@@ -155,6 +157,12 @@ export const initialAppSettings = {
         isShown: true,
         isLocked: false,
         selectors: ["#page-manager"],
+      },
+      youtubePlayables: {
+        label: "YouTube Playables",
+        isShown: true,
+        isLocked: false,
+        selectors:["ytd-rich-section-renderer"]
       },
       thumbnails: {
         label: "Thumbnails",
@@ -200,6 +208,32 @@ export const APP_MAPPINGS = {
 };
 
 /**
+ * Checks whether a webpage is supported by the app
+ * If valid, returns the correct page
+ * If not valid, returns page not supported
+ */
+
+const getPageType = (url) => {
+  try {
+    const { hostname, pathname } = new URL(url);
+    const appMapping = APP_MAPPINGS[hostname];
+    
+    if (appMapping) {
+      const page = appMapping.pages[pathname];
+      if (page) {
+        return page;
+      }
+    }
+    return PAGE_NOT_SUPPORTED;
+  } catch (error) {
+    console.error("Error parsing URL in isValidPage:", error);
+    return PAGE_NOT_SUPPORTED;
+  }
+}
+
+
+
+/**
  * Installation Logic
  */
 chrome.runtime.onInstalled.addListener(async () => {
@@ -238,7 +272,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 /**
  * When new tab is activated:
  * 1. Make sure appSettings is always defined. Reset if someone tinkered with it
- * 2. Update the selectedPage
+ * 2. Update the selected page, if the hostname isn't youtube.com, then set selectedPage to empty string
  */
 chrome.tabs.onActivated.addListener(async () => {
   try {
@@ -259,17 +293,8 @@ chrome.tabs.onActivated.addListener(async () => {
     if (!activeTab || !activeTab.url) return;
 
     try {
-      const { hostname, pathname } = new URL(activeTab.url);
-      const app = APP_MAPPINGS[hostname] ? APP_MAPPINGS[hostname].app : null;
+      appSettings.generalSettings.lastSelectedPage = getPageType(activeTab.url);
 
-      // If the URL does not correspond to a supported app
-      if (!app) {
-        appSettings.generalSettings.isAppSupported = false;
-      } else {
-        appSettings.generalSettings.isAppSupported = true;
-        const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
-        appSettings.generalSettings.lastSelectedPage = updatedLastSelectedPage;
-      }
       await chrome.storage.sync.set({ appSettings });
     } catch (urlError) {
       console.error("Error parsing URL of active tab:", urlError);
@@ -283,7 +308,7 @@ chrome.tabs.onActivated.addListener(async () => {
  * When a tab is reloaded, update the lastSelectedPage
  */
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete") {
+  // if (changeInfo.status === "complete") {
     try {
       const tabs = await chrome.tabs.query({
         active: true,
@@ -291,31 +316,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       });
 
       // wait for tab to finish loading
-      if (changeInfo.status === "complete") {
-        // Skip if not in a supported URL or the app does not match the URL
-        const url = new URL(tab.url);
-        const hostname = url.hostname;
-        const pathname = url.pathname;
-
-        // Check if the URL corresponds to a supported app
-        const app = APP_MAPPINGS[hostname] ? APP_MAPPINGS[hostname].app : null;
-
+      if (changeInfo.status === "complete") { 
         // Get the current appSettings state
         const result = await chrome.storage.sync.get("appSettings");
         const appSettings = result.appSettings || initialAppSettings;
 
-        // If the URL does not correspond to a supported app
-        if (!app) {
-          appSettings.generalSettings.isAppSupported = false;
-        } else {
-          appSettings.generalSettings.isAppSupported = true;
-
-          // Update the state's last selected page to correspond to the URL's pathname
-          const updatedLastSelectedPage =
-            APP_MAPPINGS[hostname].pages[pathname];
-          appSettings.generalSettings.lastSelectedPage =
-            updatedLastSelectedPage;
-        }
+        appSettings.generalSettings.lastSelectedPage = getPageType(tab.url);
 
         // Save the updated appState back to chrome's storage
         await chrome.storage.sync.set({ appSettings });
@@ -323,7 +329,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     } catch (error) {
       console.log("Error when new tab is reloaded/updated:", error);
     }
-  }
+  // }
 });
 
 /**
@@ -339,8 +345,6 @@ chrome.action.onClicked.addListener(async (tabId, changeInfo, tab) => {
 
     const { appSettings } = result;
 
-    const newAppSettings = { ...appSettings };
-
     // Get the active tab
     const [activeTab] = await chrome.tabs.query({
       active: true,
@@ -350,18 +354,16 @@ chrome.action.onClicked.addListener(async (tabId, changeInfo, tab) => {
 
     try {
       const { hostname, pathname } = new URL(activeTab.url);
-      const app = APP_MAPPINGS[hostname] ? APP_MAPPINGS[hostname].app : null;
 
-      // If the URL does not correspond to a supported app
-      if (!app) {
-        newAppSettings.generalSettings.isAppSupported = false;
-      } else {
-        newAppSettings.generalSettings.isAppSupported = true;
-        const updatedLastSelectedPage = APP_MAPPINGS[hostname].pages[pathname];
-        newAppSettings.generalSettings.lastSelectedPage =
-          updatedLastSelectedPage;
-      }
-      await chrome.storage.sync.set({ appSettings: newAppSettings });
+      // If the current pathname (page) does not correlate to one of the main pathnames
+      const lastSelectedPage = Object.keys(APP_MAPPINGS[hostname].pages).includes(pathname) ?
+      APP_MAPPINGS[hostname]?.pages[pathname]
+      // Set the page as not supported
+        : PAGE_NOT_SUPPORTED;
+      
+      appSettings.generalSettings.lastSelectedPage = lastSelectedPage;
+
+      await chrome.storage.sync.set({ appSettings });
     } catch (urlError) {
       console.error("Error parsing URL of current tab:", urlError);
     }

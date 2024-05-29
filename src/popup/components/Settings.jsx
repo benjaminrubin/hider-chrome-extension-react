@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Page from "./PageLayouts/Page.jsx";
 import PageSelectDropdown from "./PageLayouts/PageSelectDropdown.jsx";
+import { APPS, PAGE_NOT_SUPPORTED } from "../../background.js";
 
 /**
  * Converts a string from hyphenated or space-separated format to camelCase.
@@ -57,31 +58,40 @@ const Settings = () => {
     );
   }
 
-  const { lastSelectedApp, lastSelectedPage } = appSettings.generalSettings;
-  const clickedPageSettings =
-    appSettings[lastSelectedApp]?.pageSettings[clickedPage];
-  const isPageSupported = !!clickedPageSettings;
+  
+  let { lastSelectedPage } = appSettings.generalSettings;
+  
+  // TODO: THERE IS A PROBLEM WITH THE clickedPageSettings -> needs to be addressed  
 
-  // if (!isPageSupported) {
-  //   return (
-  //     <div
-  //       style={{
-  //         color: "black",
-  //         textAlign: "center",
-  //         fontWeight: "bold",
-  //         marginTop: "20px",
-  //         marginBottom: "20px",
-  //         width: '100%'
-  //       }}
-  //     >
-  //       This page is not supported
-  //     </div>
-  //   );
-  // }
+  const clickedPageSettings =
+    appSettings[APPS.YOUTUBE]?.pageSettings[clickedPage];
+  const isPageSupported = lastSelectedPage !== PAGE_NOT_SUPPORTED;
+
+  console.log('what is clickedpage?', clickedPage)
+  console.log('last selected page is', lastSelectedPage)
+  console.log('is page supported?', isPageSupported)  
+
+  if (!isPageSupported) {
+    return (
+      <div
+        style={{
+          color: "black",
+          textAlign: "center",
+          fontWeight: "bold",
+          marginTop: "20px",
+          marginBottom: "20px",
+          width: '100%'
+        }}
+      >
+        This page is not supported
+      </div>
+    );
+  }
 
   const pageLabels = Object.entries(
-    appSettings[lastSelectedApp].pageSettings
-  ).map(([key, { label }]) => label);
+    appSettings[APPS.YOUTUBE].pageSettings
+  ).map(([_, { label }]) => label);
+  
 
   return (
     <div style={{ width: "100%" }}>
@@ -91,12 +101,19 @@ const Settings = () => {
         setClickedPage={setClickedPage}
         pageLabels={pageLabels}
       />
-      <Page
-        appName={lastSelectedApp}
+      
+      {isPageSupported ?
+        <Page
+        appName={APPS.YOUTUBE}
         clickedPage={clickedPage}
         pageElements={clickedPageSettings.pageElements}
         pageLayoutClassName={clickedPageSettings.pageLayoutClassName}
-      />
+        />
+        :
+        <div>
+          Page is Not Supported
+        </div>
+    }
     </div>
   );
 };
