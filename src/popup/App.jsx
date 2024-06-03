@@ -1,46 +1,28 @@
 import React, { useEffect, useState } from "react";
 import "./popup.css";
-import Logo from "./Logo.jsx";
 import Settings from "./components/Settings.jsx";
+import Navigation from "./Navigation.jsx";
+import Menu from "./Menu.jsx";
+import { useDarkMode } from "./DarkModeContext.js";
 
 const App = () => {
-  const [version, setVersion] = useState("");
-  const [reviewBtnLabel, setReviewBtnLabel] = useState("Leave a Review ⭐️");
-
-  useEffect(() => {
-    const manifest = chrome.runtime.getManifest();
-    setVersion(manifest.version);
-  }, []);
+  const { darkModeOn } = useDarkMode();
+  const [displayMenu, setDisplayMenu] = useState(false);
 
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginBottom: "2px",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Logo />
-          <h4 id='version'>Version {version}</h4>
-        </div>
-        <a
-          href='https://chromewebstore.google.com/detail/dnnpgmbhdojpjkpeeafgdelohfhbpiga?hl=en'
-          style={{ textDecoration: "none" }}
-          target='_blank'
-        >
-          <h4 id='leave-review' onClick={() => setReviewBtnLabel("Thank you!")}>
-            {reviewBtnLabel}
-          </h4>
-        </a>
-      </div>
+    <div id='app-body' className={darkModeOn ? 'dark' : ''}>
+      <Menu
+        setDisplayMenu={setDisplayMenu}
+        displayMenu={displayMenu}
+      />
+      <Navigation
+        setDisplayMenu={setDisplayMenu}
+      />
       <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
         {/* <Sidebar /> */}
         <Settings />
       </div>
-    </>
+    </div>
   );
 };
 

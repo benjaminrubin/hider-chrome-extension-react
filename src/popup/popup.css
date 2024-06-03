@@ -1,24 +1,31 @@
 html {
   width: 18rem;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  background-color: white;
+  /* background-color: white; */
 }
 
 body {
   margin: 0;
+}
+
+#app-body {
   padding: 8px;
+}
+
+#app-body.dark {
+  background: #212121 !important;
 }
 
 .instructions {
   font-size: 0.75rem;
   width: 100%;
   text-align: center;
-  color: #5c5c5c;
+  color: #0f172a;
 }
 
 #version {
-  font-size: 0.5rem;
-  /* text-align: center; */
+  font-size: .75rem;
+  text-align: center;
   margin: 0;
   color: gray;
 }
@@ -30,13 +37,148 @@ body {
   border-radius: 4px;
   padding: 1px 3px;
   margin: 0;
-  background: red;
+  background: #c33619;
 }
 
 #leave-review:hover {
-  background: #9E0000;
+  background: red;
   cursor: pointer;
 }
+
+#menu {
+  position: absolute;
+  z-index: 98;
+  top: 0px;
+  left: -18rem;
+  height: 100%;
+  width: 18rem;
+  background: white;
+  
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+#menu.dark {
+  background: #212121;
+}
+
+#menu.menu-displayed {
+  left: 0rem;
+}
+
+#menu-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#menu-icon:hover {
+  background: #E3E3E3;
+  border-radius: 0.375rem;
+}
+
+#menu-icon.dark:hover {
+  background-color: #717273;
+}
+
+#menu-icon.dark {
+
+}
+
+#close-menu-button {
+  color: #212121;
+  position: absolute;
+  font-size: 1.25rem;
+  left: 0.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  top: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.375rem;
+}
+
+#close-menu-button:hover {
+  background-color: #E3E3E3;
+}
+
+#close-menu-button.dark {
+  color: white;
+}
+
+#close-menu-button.dark:hover {
+  background-color: #717273;
+}
+
+#close-menu-button div {
+  align-self: center;
+  position: relative;
+  top: 0;
+}
+
+#menu-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  margin: auto;
+  margin-top: 2rem;
+  width: calc(100% - 1rem);
+  position: relative;
+}
+
+#menu-body.dark {
+  color: white;
+}
+
+#dark-mode-button {
+  color: white;
+  background: #7a7a7a;
+  position: relative;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: cubic-bezier();
+  transition-duration: 100ms;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+#dark-mode-button.dark {
+
+}
+
+#dark-mode-button:hover {
+  background: #898989;
+}
+
+#dark-mode-button div:nth-child(2) {
+  font-weight: bold;
+  background: #535353;
+  padding: .2rem .4rem;
+  border-radius: 5px;
+}
+
+#settings-message {
+  text-align: center;
+  margin-top: .75rem;
+  font-size: .7rem;
+  width: 100%;
+}
+
 
 /* @media (prefers-color-scheme: dark) {
   body {

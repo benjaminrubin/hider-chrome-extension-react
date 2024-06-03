@@ -1,4 +1,6 @@
+
 .layout-element {
+  background: #1e293b;
   position: relative;
   text-align: center;
   padding: 0.5rem 1rem;
@@ -17,12 +19,12 @@
 }
 
 .displayed {
-  background-color: #eb4928;
+  background-color: #c33619;
   color: white;
   border: 1px solid #910d0d;
 }
 .displayed:hover {
-  background-color: #c33619;
+  background-color: #eb4928;
 }
 
 .displayed:active {
@@ -50,16 +52,25 @@
   color: white;
   font-weight: bold;
   margin-bottom: .5rem;
+  border: 1px solid #785DFF;
+}
+
+#toggle-all.dark {
+  background-color: #5D45D8;
 }
 
 #toggle-all:hover {
   background-color: #5D45D8;
+}
+#toggle-all.dark:hover {
+  background-color: #785DFF;
 }
 
 #toggle-all:active {
   background-color: #785DFF;
   transform: scale(0.96);
 }
+
 
 
 /* YOUTUBE PAGE LAYOUTS */
@@ -145,14 +156,16 @@
   width: 1.2rem;
   height: 1.2rem;
   border-radius: 20%;
-  z-index: 99;
+  z-index: 95;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 .1rem black;
 }
 .lock-button:active {
   transform: scale(0.90);
 }
+
 
 .lock-image {
   width: 7px;
@@ -167,14 +180,14 @@
   background-color: #7F072C;
 }
 .locked:hover {
-  bacground-color: #56071F;
+  background-color: #A7125F;
 }
 
 .unlocked {
   background-color: #BABABA;
 }
 .unlocked:hover {
-  background-color: #BBBBBB;
+  background-color: #C1E9F8;
 }
 
 /* @media (prefers-color-scheme: dark) {

@@ -26,6 +26,7 @@ export const initialAppSettings = {
     isAppSupported: true, // <-- TODO: Incorporate logic for this
     lastSelectedApp: APPS.YOUTUBE,
     lastSelectedPage: PAGES[APPS.YOUTUBE].HOME_PAGE,
+    darkModeOn: false,
   },
   youtube: {
     pageSettings: {
@@ -159,7 +160,7 @@ export const initialAppSettings = {
         selectors: ["#page-manager"],
       },
       youtubePlayables: {
-        label: "YouTube Playables",
+        label: "Playables & Breaking News",
         isShown: true,
         isLocked: false,
         selectors:["ytd-rich-section-renderer"]

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import "./WindowFrame.css";
+import "./MockBrowser.css";
 import "./Layouts.css";
-import { WindowFrame } from "./WindowFrame.jsx";
+import { MockBrowser } from "./MockBrowser.jsx";
 import PageLayoutElement from "./PageLayoutElement.jsx";
 import { APPS } from "../../../background.js";
+import { useDarkMode } from "../../DarkModeContext.js";
 
 const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutClassName }) => {
   const [appSettings, setAppSettings] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const { darkModeOn } = useDarkMode();
 
   useEffect(() => {
     // Fetch settings from chrome.storage.sync
@@ -149,16 +151,16 @@ const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutCla
     <>
       <div
         id='toggle-all'
-        className='layout-element'
+        className={`layout-element ${darkModeOn ? 'dark' : ''}`}
         onClick={toggleAllElements}
       >
         Toggle All Elements
       </div>
-      <WindowFrame url={url}>
+      <MockBrowser url={url}>
         <div id='page-layout' className={pageLayoutClassName}>
           {renderElements(pageElements.mainLayout)}
         </div>
-      </WindowFrame>
+      </MockBrowser>
       <div>
         {/* <h2 className='instructions'>Other elements</h2> */}
         {renderElements(pageElements.other)}

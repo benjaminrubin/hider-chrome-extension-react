@@ -39,6 +39,7 @@
   font-size: 0.75rem;
   width: max-content;
   border-radius: 0.3rem;
+  font-weight: bold;
   /* display: inline-block; */
   cursor: pointer;
   margin: 0.15rem;
@@ -46,23 +47,36 @@
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
-  font-weight: bold;
+}
 
-}
 .page-button:hover {
-    background-color: #bfbfbf;
+  background-color: #878787;
+  color: white;
 }
+
+.page-button.dark {
+  color: white;
+  border: 1px solid #7F7F7F;
+  background-color: #5c5c5c;
+}
+
+.page-button.dark:hover {
+  background-color: #8D8D8D;
+}
+
+
 .page-button:active {
   transform: scale(0.96);
 }
 
 #page-button-clicked {
-  background-color: #eb4928;
+  background-color: #c33619;
   color: white;
   border-color: #910D0D;
+  font-weight: bold;
 }
 #page-button-clicked:hover {
-  background-color: #c33619;
+  background-color: #eb4928;
 }
 
 .page-buttons {

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Page from "./PageLayouts/Page.jsx";
 import PageSelectDropdown from "./PageLayouts/PageSelectDropdown.jsx";
-import { APPS, PAGE_NOT_SUPPORTED } from "../../background.js";
+import { APPS, PAGE_NOT_SUPPORTED, PAGES } from "../../background.js";
+import { useDarkMode } from "../DarkModeContext.js";
 
 /**
  * Converts a string from hyphenated or space-separated format to camelCase.
@@ -15,7 +16,7 @@ const camelize = (str) => {
   // First, check if the input is already in camelCase. If it is, return as is.
   // A simple regex to check for camelCase. This regex will match if there are no hyphens
   // and if there's at least one lowercase letter followed by an uppercase letter.
-  if (!str) return '';
+  if (!str) return "";
 
   if (/^[^-]+([a-z][A-Z]|[A-Z][a-z])/.test(str)) {
     return str;
@@ -24,17 +25,19 @@ const camelize = (str) => {
   // If the input is not in camelCase, convert hyphenated or space-separated strings to camelCase
   return str
     .split(/-|\s+/)
-    .map((word, index) => 
-      index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    .map((word, index) =>
+      index === 0
+        ? word.toLowerCase()
+        : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     )
-    .join('');
+    .join("");
 };
-
 
 const Settings = () => {
   const [appSettings, setAppSettings] = useState({});
   const [clickedPage, setClickedPage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const { darkModeOn } = useDarkMode();
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -58,29 +61,22 @@ const Settings = () => {
     );
   }
 
-  
   let { lastSelectedPage } = appSettings.generalSettings;
-  
-  // TODO: THERE IS A PROBLEM WITH THE clickedPageSettings -> needs to be addressed  
 
   const clickedPageSettings =
     appSettings[APPS.YOUTUBE]?.pageSettings[clickedPage];
   const isPageSupported = lastSelectedPage !== PAGE_NOT_SUPPORTED;
 
-  console.log('what is clickedpage?', clickedPage)
-  console.log('last selected page is', lastSelectedPage)
-  console.log('is page supported?', isPageSupported)  
-
   if (!isPageSupported) {
     return (
       <div
         style={{
-          color: "black",
+          color: `${darkModeOn ? 'white' : 'black'}`,
           textAlign: "center",
           fontWeight: "bold",
           marginTop: "20px",
           marginBottom: "20px",
-          width: '100%'
+          width: "100%",
         }}
       >
         This page is not supported
@@ -88,10 +84,9 @@ const Settings = () => {
     );
   }
 
-  const pageLabels = Object.entries(
-    appSettings[APPS.YOUTUBE].pageSettings
-  ).map(([_, { label }]) => label);
-  
+  const pageLabels = Object.entries(appSettings[APPS.YOUTUBE].pageSettings).map(
+    ([_, { label }]) => label
+  );
 
   return (
     <div style={{ width: "100%" }}>
@@ -101,19 +96,17 @@ const Settings = () => {
         setClickedPage={setClickedPage}
         pageLabels={pageLabels}
       />
-      
-      {isPageSupported ?
+
+      {isPageSupported ? (
         <Page
-        appName={APPS.YOUTUBE}
-        clickedPage={clickedPage}
-        pageElements={clickedPageSettings.pageElements}
-        pageLayoutClassName={clickedPageSettings.pageLayoutClassName}
+          appName={APPS.YOUTUBE}
+          clickedPage={clickedPage}
+          pageElements={clickedPageSettings.pageElements}
+          pageLayoutClassName={clickedPageSettings.pageLayoutClassName}
         />
-        :
-        <div>
-          Page is Not Supported
-        </div>
-    }
+      ) : (
+        <div>Page is Not Supported</div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from "react";
-import LockImage from "../../../../public/images/lock.png";
+import LockEnabledImage from "../../../../public/images/lock-enabled.png";
+import LockDisabledImage from "../../../../public/images/lock-disabled.png";
 
 
 const ELEMENT_STATE = {
@@ -42,7 +43,7 @@ const PageLayoutElement = ({
         className={`lock-button ${lockButtonClass}`}
         onClick={handleLockButtonClick}
       >
-        <img className='lock-image' src={LockImage} alt={"Lock"} />
+        <img className='lock-image' src={isLocked ? LockEnabledImage : LockDisabledImage} alt={"Lock"} />
       </div>
       {label}
     </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import "./PageSelectDropdown.css";
+import { useDarkMode } from "../../DarkModeContext";
 
 const PageSelectDropdown = ({
   lastSelectedPage,
@@ -7,6 +8,9 @@ const PageSelectDropdown = ({
   setClickedPage,
   pageLabels,
 }) => {
+
+  const { darkModeOn } = useDarkMode();
+
   // Camelize method
   const camelize = (str) => {
     return str
@@ -41,7 +45,7 @@ const PageSelectDropdown = ({
               {isCurrentPage && <div id='current-page'>Current ↓</div>}
               <div
                 id={clickedId}
-                className='page-button'
+                className={`page-button ${darkModeOn ? 'dark' : ''}`}
                 onClick={() => setClickedPage(camelize(pageLabel))}
                 // value={pageLabel}
               >
