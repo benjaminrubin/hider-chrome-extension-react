@@ -15,10 +15,11 @@ export const PAGES = {
     HOME_PAGE: "home-page",
     VIDEO_PAGE: "video-page",
     SEARCH_PAGE: "search-page",
+    SUBSCRIPTIONS_PAGE: "subscriptions-page",
   },
 };
 
-export const PAGE_NOT_SUPPORTED = 'page-not-supported';
+export const PAGE_NOT_SUPPORTED = "page-not-supported";
 
 // The Master App Settings
 export const initialAppSettings = {
@@ -31,16 +32,16 @@ export const initialAppSettings = {
   youtube: {
     pageSettings: {
       homePage: {
-        label: "Home Page",
+        label: "Home",
         path: "/",
         pageLayoutClassName: "home-page",
         pageElements: {
           mainLayout: ["navigation", "sidebar", "videos"],
-          other: ["homeShorts", "thumbnails", "youtubePlayables"],
+          other: ["homeShorts", "homeThumbnails", "youtubePlayables"],
         },
       },
       videoPage: {
-        label: "Video Page",
+        label: "Video",
         path: "/watch",
         pageLayoutClassName: "video-page",
         pageElements: {
@@ -51,16 +52,25 @@ export const initialAppSettings = {
             "comments",
             "recommendations",
           ],
-          other: ["live-chat", "videoShorts", "thumbnails", "end-cards"],
+          other: ["live-chat", "videoShorts", "videoThumbnails", "end-cards"],
         },
       },
       searchPage: {
-        label: "Search Page",
+        label: "Search",
         path: "/results",
         pageLayoutClassName: "search-page",
         pageElements: {
           mainLayout: ["navigation", "sidebar", "results"],
-          other: ["searchShorts", "thumbnails", "irrelevantResults"],
+          other: ["searchShorts", "searchThumbnails", "irrelevantResults"],
+        },
+      },
+      subscriptionsPage: {
+        label: "Subscriptions",
+        path: "/feed/subscriptions",
+        pageLayoutClassName: "subscriptions-page",
+        pageElements: {
+          mainLayout: ["navigation", "sidebar", "videos"],
+          other: ["subscriptionsShorts", "subscriptionsThumbnails"],
         },
       },
     },
@@ -108,7 +118,7 @@ export const initialAppSettings = {
         selectors: ["#contents", "#header"],
       },
       videoShorts: {
-        label: "Shorts",
+        label: "Shorts (Video)",
         isShown: true,
         isLocked: false,
         selectors: [
@@ -119,7 +129,7 @@ export const initialAppSettings = {
         ],
       },
       homeShorts: {
-        label: "Shorts",
+        label: "Shorts (Home)",
         isShown: true,
         isLocked: false,
         selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', "[is-shorts]"],
@@ -134,10 +144,24 @@ export const initialAppSettings = {
         label: "Irrelevant Search Results",
         isShown: true,
         isLocked: false,
-        selectors: ["ytd-shelf-renderer[modern-typography]", "ytd-horizontal-card-list-renderer"],
+        selectors: [
+          "ytd-shelf-renderer[modern-typography]",
+          "ytd-horizontal-card-list-renderer",
+        ],
       },
       searchShorts: {
-        label: "Shorts",
+        label: "Shorts (Search)",
+        isShown: true,
+        isLocked: false,
+        selectors: [
+          '[aria-label="Shorts"]',
+          '[title="Shorts"]',
+          "[is-shorts]",
+          "ytd-reel-shelf-renderer",
+        ],
+      },
+      subscriptionsShorts: {
+        label: "Shorts (Subscriptions)",
         isShown: true,
         isLocked: false,
         selectors: [
@@ -163,10 +187,10 @@ export const initialAppSettings = {
         label: "Playables & Breaking News",
         isShown: true,
         isLocked: false,
-        selectors:["ytd-rich-section-renderer"]
+        selectors: ["ytd-rich-section-renderer"],
       },
-      thumbnails: {
-        label: "Thumbnails",
+      homeThumbnails: {
+        label: "Thumbnails (Home)",
         isShown: true,
         isLocked: false,
         selectors: [
@@ -177,6 +201,74 @@ export const initialAppSettings = {
           ".shelf-skeleton",
           ".thumbnail",
           ".ytp-videowall-still-image",
+          ".ShortsLockupViewModelHostThumbnailContainer",
+        ],
+        additionalCss: `
+        .metadata.ytd-compact-video-renderer {
+          padding-right: 0 !important;
+        }
+        .shelf-skeleton .video-skeleton {
+          margin-right: 4px;
+        }`,
+      },
+      searchThumbnails: {
+        label: "Thumbnails (Search)",
+        isShown: true,
+        isLocked: false,
+        selectors: [
+          "ytd-thumbnail",
+          "ytd-playlist-thumbnail",
+          "#thumbnail",
+          "#thumbnail-container",
+          ".shelf-skeleton",
+          ".thumbnail",
+          ".ytp-videowall-still-image",
+          ".ShortsLockupViewModelHostThumbnailContainer",
+          "#hero-image",
+        ],
+        additionalCss: `
+        .metadata.ytd-compact-video-renderer {
+          padding-right: 0 !important;
+        }
+        .shelf-skeleton .video-skeleton {
+          margin-right: 4px;
+        }`,
+      },
+      subscriptionsThumbnails: {
+        label: "Thumbnails (Subscriptions)",
+        isShown: true,
+        isLocked: false,
+        selectors: [
+          "ytd-thumbnail",
+          "ytd-playlist-thumbnail",
+          "#thumbnail",
+          "#thumbnail-container",
+          ".shelf-skeleton",
+          ".thumbnail",
+          ".ytp-videowall-still-image",
+          ".ShortsLockupViewModelHostThumbnailContainer",
+        ],
+        additionalCss: `
+        .metadata.ytd-compact-video-renderer {
+          padding-right: 0 !important;
+        }
+        .shelf-skeleton .video-skeleton {
+          margin-right: 4px;
+        }`,
+      },
+      videoThumbnails: {
+        label: "Thumbnails (Video)",
+        isShown: true,
+        isLocked: false,
+        selectors: [
+          "ytd-thumbnail",
+          "ytd-playlist-thumbnail",
+          "#thumbnail",
+          "#thumbnail-container",
+          ".shelf-skeleton",
+          ".thumbnail",
+          ".ytp-videowall-still-image",
+          ".ShortsLockupViewModelHostThumbnailContainer",
         ],
         additionalCss: `
         .metadata.ytd-compact-video-renderer {
@@ -191,7 +283,6 @@ export const initialAppSettings = {
 };
 
 export const YOUTUBE_URL = "www.youtube.com";
-export const TIKTOK_URL = "www.tiktok.com";
 
 export const APP_MAPPINGS = {
   [YOUTUBE_URL]: {
@@ -200,11 +291,8 @@ export const APP_MAPPINGS = {
       "/watch": "videoPage",
       "/results": "searchPage",
       "/": "homePage",
+      "/feed/subscriptions": "subscriptionsPage",
     },
-  },
-  [TIKTOK_URL]: {
-    app: "tiktok",
-    pages: {},
   },
 };
 
@@ -218,56 +306,111 @@ const getPageType = (url) => {
   try {
     const { hostname, pathname } = new URL(url);
     const appMapping = APP_MAPPINGS[hostname];
-    
+
     if (appMapping) {
+      // Exact match first
       const page = appMapping.pages[pathname];
       if (page) {
         return page;
       }
+
+      // console.log("pathname is", pathname);
+
+      // Pattern matching or generic handling (adjust logic as needed)
+      if (pathname.startsWith("/feed/")) {
+        return "subscriptionsPage"; // Or any other desired logic
+      }
+
+      // Other pattern matching or default handling
     }
+
     return PAGE_NOT_SUPPORTED;
   } catch (error) {
-    console.error("Error parsing URL in isValidPage:", error);
+    console.error("Error parsing URL in getPageType:", error);
     return PAGE_NOT_SUPPORTED;
   }
-}
-
-
+};
 
 /**
- * Installation Logic
+ * This function fixes selectors that should be arrays but are objects
+ * for both Thumbnails and Shorts related elements
  */
-chrome.runtime.onInstalled.addListener(async () => {
-  try {
-    // check if there is an appState in chrome storage
-    const result = await chrome.storage.sync.get("appSettings");
-
-    if (result.appSettings) {
-      const existingSettings = result.appSettings;
-      const mergedSettings = { ...initialAppSettings, ...existingSettings };
-
-      // Recursively merge nested objects
-      const deepMerge = (target, source) => {
-        for (const key in source) {
-          if (source[key] instanceof Object) {
-            Object.assign(source[key], deepMerge(target[key], source[key]));
-          }
+function fixObjectSelectors(settings) {
+  if (settings.youtube && settings.youtube.elementsSettings) {
+    Object.keys(settings.youtube.elementsSettings).forEach((key) => {
+      if (key.endsWith("Thumbnails") || key.endsWith("Shorts")) {
+        const element = settings.youtube.elementsSettings[key];
+        if (
+          element.selectors &&
+          typeof element.selectors === "object" &&
+          !Array.isArray(element.selectors)
+        ) {
+          // Convert object to array
+          element.selectors = Object.values(element.selectors);
         }
-        Object.assign(target || {}, source);
-        return target;
-      };
-
-      const finalSettings = deepMerge(initialAppSettings, mergedSettings);
-
-      await chrome.storage.sync.set({ appSettings: finalSettings });
-    } else {
-      // If there are no existing settings, set the initial settings
-      await chrome.storage.sync.set({ appSettings: initialAppSettings });
-    }
-  } catch (error) {
-    console.log("Error in initializing settings on installation:", error);
+      }
+    });
   }
+  return settings;
+}
 
+/**
+ * This function fixes the typo in subscriptionsPage pageElements
+ */
+function fixSubscriptionsShorts(settings) {
+  if (
+    settings.youtube &&
+    settings.youtube.pageSettings &&
+    settings.youtube.pageSettings.subscriptionsPage &&
+    settings.youtube.pageSettings.subscriptionsPage.pageElements &&
+    settings.youtube.pageSettings.subscriptionsPage.pageElements.other &&
+    Array.isArray(
+      settings.youtube.pageSettings.subscriptionsPage.pageElements.other
+    )
+  ) {
+    const otherElements =
+      settings.youtube.pageSettings.subscriptionsPage.pageElements.other;
+    const index = otherElements.indexOf("subscriptionShorts");
+    if (index !== -1) {
+      otherElements[index] = "subscriptionsShorts";
+    }
+  }
+  return settings;
+}
+
+/**
+ * Installation and Update Logic
+ */
+chrome.runtime.onInstalled.addListener(async (details) => {
+
+  console.log('This is what is inside the storage.sync');
+  const okay = await chrome.storage.sync.get(["appSettings"]);
+  console.log(okay);
+
+
+  if (details.reason === "install" || details.reason === "update") {
+    try {
+      const result = await chrome.storage.sync.get(["appSettings"]);
+      let updatedSettings;
+
+      if (result.appSettings) {
+        console.log("Existing settings found. Updating...");
+        updatedSettings = result.appSettings;
+      } else {
+        console.log("No existing settings found. Using initial settings...");
+        updatedSettings = initialAppSettings;
+      }
+
+      // Apply fixes
+      updatedSettings = await fixObjectSelectors(updatedSettings);
+      updatedSettings = await fixSubscriptionsShorts(updatedSettings);
+
+      await chrome.storage.sync.set({ appSettings: updatedSettings });
+      console.log("App settings updated successfully:", updatedSettings);
+    } catch (error) {
+      console.error("Error updating app settings:", error);
+    }
+  }
 });
 
 /**
@@ -310,26 +453,26 @@ chrome.tabs.onActivated.addListener(async () => {
  */
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   // if (changeInfo.status === "complete") {
-    try {
-      const tabs = await chrome.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
+  try {
+    const tabs = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
 
-      // wait for tab to finish loading
-      if (changeInfo.status === "complete") { 
-        // Get the current appSettings state
-        const result = await chrome.storage.sync.get("appSettings");
-        const appSettings = result.appSettings || initialAppSettings;
+    // wait for tab to finish loading
+    if (changeInfo.status === "complete") {
+      // Get the current appSettings state
+      const result = await chrome.storage.sync.get("appSettings");
+      const appSettings = result.appSettings || initialAppSettings;
 
-        appSettings.generalSettings.lastSelectedPage = getPageType(tab.url);
+      appSettings.generalSettings.lastSelectedPage = getPageType(tab.url);
 
-        // Save the updated appState back to chrome's storage
-        await chrome.storage.sync.set({ appSettings });
-      }
-    } catch (error) {
-      console.log("Error when new tab is reloaded/updated:", error);
+      // Save the updated appState back to chrome's storage
+      await chrome.storage.sync.set({ appSettings });
     }
+  } catch (error) {
+    console.log("Error when new tab is reloaded/updated:", error);
+  }
   // }
 });
 
@@ -357,11 +500,13 @@ chrome.action.onClicked.addListener(async (tabId, changeInfo, tab) => {
       const { hostname, pathname } = new URL(activeTab.url);
 
       // If the current pathname (page) does not correlate to one of the main pathnames
-      const lastSelectedPage = Object.keys(APP_MAPPINGS[hostname].pages).includes(pathname) ?
-      APP_MAPPINGS[hostname]?.pages[pathname]
-      // Set the page as not supported
-        : PAGE_NOT_SUPPORTED;
-      
+      const lastSelectedPage = Object.keys(
+        APP_MAPPINGS[hostname].pages
+      ).includes(pathname)
+        ? APP_MAPPINGS[hostname]?.pages[pathname]
+        : // Set the page as not supported
+          PAGE_NOT_SUPPORTED;
+
       appSettings.generalSettings.lastSelectedPage = lastSelectedPage;
 
       await chrome.storage.sync.set({ appSettings });

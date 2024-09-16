@@ -48,6 +48,8 @@ const applySettings = async () => {
         existingStyle.remove();
       }
 
+      console.log('Css is', css)
+
       let style = document.createElement("style");
       style.setAttribute("id", "youtube-custom-style");
       style.textContent = css;

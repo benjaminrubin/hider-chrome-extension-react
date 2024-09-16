@@ -13,7 +13,7 @@ const MenuIcon = ({ setDisplayMenu }) => {
       <HamburgerIcon
         height={18}
         width={16}
-        lineWidth={28}
+        lineWidth={30}
         lineHeight={3}
         lineColor={darkModeOn ? '#fff' : '#212121'}
       />

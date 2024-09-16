@@ -48,7 +48,7 @@ const Menu = ({ setDisplayMenu, displayMenu }) => {
         onClick={() => setDisplayMenu(false)}
         className={darkModeOn ? "dark" : ""}
       >
-        &times;
+        <div>&times;</div>
       </div>
       <div id='menu-body' className={darkModeOn ? "dark" : ""}>
         <div
@@ -60,9 +60,14 @@ const Menu = ({ setDisplayMenu, displayMenu }) => {
         >
           <Logo />
           <h4 id='version'>Version {version}</h4>
+          <div id='last-updated'>Last updated on September 16th, 2024</div>
         </div>
         <ToggleDarkModeButton />
       </div>
+      <footer>
+      <div id="issues">Encountering any issues?</div> <div id="submit-ticket"> <a href="https://docs.google.com/forms/d/e/1FAIpQLSepM4FmUS9eseL1y756Xvz0bmKPxdlTzVpNgCpkmCDrDHoHLw/viewform" target="_blank">Submit a support ticket here</a></div>
+        Developed by <a href='https://www.benjaminrubin.me' target="_blank">Benjamin Floyd Rubin</a>
+      </footer>
     </div>
   );
 };

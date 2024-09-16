@@ -138,7 +138,7 @@ const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutCla
       </div>
     );
   }
-
+  
   const clickedPagePath = appSettings[appName].pageSettings[clickedPage].path;
 
   // Last Selected App remains YouTube for now

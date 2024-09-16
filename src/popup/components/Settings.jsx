@@ -45,7 +45,13 @@ const Settings = () => {
       if (result.appSettings) {
         const { appSettings } = result;
         setAppSettings(appSettings);
-        setClickedPage(camelize(appSettings.generalSettings.lastSelectedPage));
+
+        // Set to homepage if lastSelectedPage is PAGE_NOT_SUPPORTED
+        const defaultPage =
+          appSettings.generalSettings.lastSelectedPage === PAGE_NOT_SUPPORTED
+            ? camelize(PAGES[APPS.YOUTUBE].HOME_PAGE)
+            : camelize(appSettings.generalSettings.lastSelectedPage);
+        setClickedPage(defaultPage);
       }
       setIsLoading(false);
     };
@@ -61,31 +67,20 @@ const Settings = () => {
     );
   }
 
-  let { lastSelectedPage } = appSettings.generalSettings;
+  const lastSelectedPage = appSettings.generalSettings.lastSelectedPage;
+
+  // Ensure clickedPage is set to the homepage if the lastSelectedPage is PAGE_NOT_SUPPORTED
+  const activePage = clickedPage || camelize(PAGES[APPS.YOUTUBE].HOME_PAGE);
 
   const clickedPageSettings =
-    appSettings[APPS.YOUTUBE]?.pageSettings[clickedPage];
-  const isPageSupported = lastSelectedPage !== PAGE_NOT_SUPPORTED;
+    appSettings[APPS.YOUTUBE]?.pageSettings[activePage];
+  // const isPageSupported = lastSelectedPage !== PAGE_NOT_SUPPORTED;
 
-  if (!isPageSupported) {
-    return (
-      <div
-        style={{
-          color: `${darkModeOn ? 'white' : 'black'}`,
-          textAlign: "center",
-          fontWeight: "bold",
-          marginTop: "20px",
-          marginBottom: "20px",
-          width: "100%",
-        }}
-      >
-        This page is not supported
-      </div>
-    );
-  }
-
-  const pageLabels = Object.entries(appSettings[APPS.YOUTUBE].pageSettings).map(
-    ([_, { label }]) => label
+  const pagesArray = Object.entries(appSettings[APPS.YOUTUBE].pageSettings).map(
+    ([_, { label }]) => ({
+      pageId: label + "Page",
+      pageLabel: label, // Use the extracted label here
+    })
   );
 
   return (
@@ -94,19 +89,14 @@ const Settings = () => {
         lastSelectedPage={lastSelectedPage}
         clickedPage={clickedPage}
         setClickedPage={setClickedPage}
-        pageLabels={pageLabels}
+        pagesArray={pagesArray}
       />
-
-      {isPageSupported ? (
-        <Page
-          appName={APPS.YOUTUBE}
-          clickedPage={clickedPage}
-          pageElements={clickedPageSettings.pageElements}
-          pageLayoutClassName={clickedPageSettings.pageLayoutClassName}
-        />
-      ) : (
-        <div>Page is Not Supported</div>
-      )}
+      <Page
+        appName={APPS.YOUTUBE}
+        clickedPage={clickedPage}
+        pageElements={clickedPageSettings.pageElements}
+        pageLayoutClassName={clickedPageSettings.pageLayoutClassName}
+      />
     </div>
   );
 };

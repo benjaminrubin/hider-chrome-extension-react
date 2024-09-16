@@ -6,10 +6,15 @@ const PageSelectDropdown = ({
   lastSelectedPage,
   clickedPage,
   setClickedPage,
-  pageLabels,
+  pagesArray,
 }) => {
-
   const { darkModeOn } = useDarkMode();
+
+  /**
+   * lastSelectedPage - the page determined by the window's URL
+   * clickedPage - the page chosen by the user after clicking on the name
+   * pagesArray - an array of objects containing "pageId" and "pageLabel" keys
+   */
 
   // Camelize method
   const camelize = (str) => {
@@ -20,36 +25,26 @@ const PageSelectDropdown = ({
       .replace(/\s+/g, "");
   };
 
-  /**
-   * lastSelectedPage - the page determined by the window's URL
-   * clickedPage - the page chosen by the user after clicking on the name
-   * pageLabels - all the page names of the current app
-   */
-
   return (
     <>
-      <div className='page-buttons'>
-        {pageLabels.map((pageLabel) => {
-          // Ex. of comparison pre formatting would be "Home Page" === "homePage"
-          const isCurrentPage =
-            pageLabel.replace(/ /g, "").toLowerCase() ===
-            lastSelectedPage.toLowerCase();
-          const clickedId =
-            pageLabel.replace(/ /g, "").toLowerCase() ===
-            clickedPage.toLowerCase()
-              ? "page-button-clicked"
-              : "";
+      <div className="page-buttons">
+        {pagesArray.map((page) => {
+
+          const isCurrentPage = page.pageId.toLowerCase() === lastSelectedPage.toLowerCase();
+          const clickedId = page.pageId.toLowerCase() === clickedPage.toLowerCase()
+            ? "page-button-clicked"
+            : "";
 
           return (
-            <div className='page-button-container' key={pageLabel}>
-              {isCurrentPage && <div id='current-page'>Current ↓</div>}
+            <div className="page-button-container" key={page.pageId}>
+              {isCurrentPage && <div id="current-page">Current ↓</div>}
               <div
                 id={clickedId}
-                className={`page-button ${darkModeOn ? 'dark' : ''}`}
-                onClick={() => setClickedPage(camelize(pageLabel))}
-                // value={pageLabel}
+                className={`page-button ${darkModeOn ? "dark" : ""}`}
+                onClick={() => setClickedPage(camelize(page.pageId))} // Use pageId directly
+                // No need for value prop, pageLabel is rendered
               >
-                {pageLabel}
+                {page.pageLabel}
               </div>
             </div>
           );
