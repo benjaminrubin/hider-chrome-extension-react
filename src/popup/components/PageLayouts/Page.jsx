@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import "./MockBrowser.css";
-import "./Layouts.css";
+import "../../popup.css";
 import { MockBrowser } from "./MockBrowser.jsx";
 import PageLayoutElement from "./PageLayoutElement.jsx";
 import { APPS } from "../../../background.js";
 import { useDarkMode } from "../../DarkModeContext.js";
+import pageSettingsData from "../page-settings-data.js";
 
 const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutClassName }) => {
   const [appSettings, setAppSettings] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const { darkModeOn } = useDarkMode();
 
   useEffect(() => {
     // Fetch settings from chrome.storage.sync
@@ -139,7 +138,7 @@ const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutCla
     );
   }
   
-  const clickedPagePath = appSettings[appName].pageSettings[clickedPage].path;
+  const clickedPagePath = pageSettingsData[clickedPage].path;
 
   // Last Selected App remains YouTube for now
   // This url is what is displayed in the browser UI's address bar (i.e. "www.youtube.com/watch")
@@ -151,13 +150,13 @@ const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutCla
     <>
       <div
         id='toggle-all'
-        className={`layout-element ${darkModeOn ? 'dark' : ''}`}
+        className={`layout-element`}
         onClick={toggleAllElements}
       >
         Toggle All Elements
       </div>
       <MockBrowser url={url}>
-        <div id='page-layout' className={pageLayoutClassName}>
+        <div className={pageLayoutClassName}>
           {renderElements(pageElements.mainLayout)}
         </div>
       </MockBrowser>

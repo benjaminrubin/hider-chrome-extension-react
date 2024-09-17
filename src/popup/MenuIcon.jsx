@@ -7,7 +7,7 @@ const MenuIcon = ({ setDisplayMenu }) => {
   return (
     <div
       id='menu-icon'
-      className={darkModeOn ? 'dark' : ''}
+      className={darkModeOn ? 'dark-mode' : ''}
       onClick={() => setDisplayMenu(true)}
     >
       <HamburgerIcon

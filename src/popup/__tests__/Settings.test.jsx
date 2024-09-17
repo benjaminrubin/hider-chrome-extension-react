@@ -24,7 +24,7 @@ import "@testing-library/jest-dom";
       homePage: {
         label: "Home Page",
         path: "/",
-        pageLayoutClassName: "home-page",
+        pageLayoutClassName: "home-page-layout",
         pageElements: {
           mainLayout: ["navigation", "sidebar", "videos"],
           other: ["homeShorts", "thumbnails"],
@@ -33,7 +33,7 @@ import "@testing-library/jest-dom";
       videoPage: {
         label: "Video Page",
         path: "/watch",
-        pageLayoutClassName: "video-page",
+        pageLayoutClassName: "video-page-layout",
         pageElements: {
           mainLayout: [
             "navigation",
@@ -52,7 +52,7 @@ import "@testing-library/jest-dom";
       searchPage: {
         label: "Search Page",
         path: "/results",
-        pageLayoutClassName: "search-page",
+        pageLayoutClassName: "search-page-layout",
         pageElements: {
           mainLayout: ["navigation", "sidebar", "results"],
           other: ["searchShorts", "thumbnails", "irrelevantResults"],

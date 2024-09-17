@@ -10,17 +10,16 @@ const App = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
 
   return (
-    <div id='app-body' className={darkModeOn ? 'dark' : ''}>
-      <Menu
-        setDisplayMenu={setDisplayMenu}
-        displayMenu={displayMenu}
-      />
-      <Navigation
-        setDisplayMenu={setDisplayMenu}
-      />
-      <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-        {/* <Sidebar /> */}
-        <Settings />
+    <div className={darkModeOn ? 'dark-mode' : ''}>
+      <Menu setDisplayMenu={setDisplayMenu} displayMenu={displayMenu} />
+      <div id='app-canvas'>
+        <div id="overlay" className={displayMenu ? 'visible' : ''}></div>
+        <div id="app-body" className={displayMenu ? 'scale-down' : ''}>
+          <Navigation setDisplayMenu={setDisplayMenu} />
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            <Settings />
+          </div>
+        </div>
       </div>
     </div>
   );

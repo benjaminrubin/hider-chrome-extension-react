@@ -34,23 +34,27 @@ const Menu = ({ setDisplayMenu, displayMenu }) => {
       menuClassNames += "menu-displayed ";
     }
 
-    if (darkModeOn) {
-      menuClassNames += "dark ";
-    }
-
     return menuClassNames;
+  };
+
+  const DonateButton = () => {
+    return (
+      <a
+        href='https://buymeacoffee.com/benjaminfloydrubin'
+        target='_blank'
+        id='donate-button'
+      >
+        <div>Buy me a coffee! ☕️</div>
+      </a>
+    );
   };
 
   return (
     <div id='menu' className={renderMenuClassNames()}>
-      <div
-        id='close-menu-button'
-        onClick={() => setDisplayMenu(false)}
-        className={darkModeOn ? "dark" : ""}
-      >
+      <div id='close-menu-button' onClick={() => setDisplayMenu(false)}>
         <div>&times;</div>
       </div>
-      <div id='menu-body' className={darkModeOn ? "dark" : ""}>
+      <div id='menu-body'>
         <div
           style={{
             display: "flex",
@@ -60,13 +64,28 @@ const Menu = ({ setDisplayMenu, displayMenu }) => {
         >
           <Logo />
           <h4 id='version'>Version {version}</h4>
-          <div id='last-updated'>Last updated on September 16th, 2024</div>
+          <div id='last-updated'>Last updated on September 17th, 2024</div>
         </div>
         <ToggleDarkModeButton />
       </div>
       <footer>
-      <div id="issues">Encountering any issues?</div> <div id="submit-ticket"> <a href="https://docs.google.com/forms/d/e/1FAIpQLSepM4FmUS9eseL1y756Xvz0bmKPxdlTzVpNgCpkmCDrDHoHLw/viewform" target="_blank">Submit a support ticket here</a></div>
-        Developed by <a href='https://www.benjaminrubin.me' target="_blank">Benjamin Floyd Rubin</a>
+        <div id='issues'>Encountering any issues?</div>{" "}
+        <div id='submit-ticket'>
+          {" "}
+          <a
+            href='https://docs.google.com/forms/d/e/1FAIpQLSepM4FmUS9eseL1y756Xvz0bmKPxdlTzVpNgCpkmCDrDHoHLw/viewform'
+            target='_blank'
+          >
+            Submit a support ticket here
+          </a>
+        </div>
+        <DonateButton />
+        <div>
+          Developed by{" "}
+          <a href='https://www.benjaminrubin.me' target='_blank'>
+            Benjamin Floyd Rubin
+          </a>
+        </div>
       </footer>
     </div>
   );
