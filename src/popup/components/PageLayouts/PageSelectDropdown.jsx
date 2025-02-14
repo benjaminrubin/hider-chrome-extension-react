@@ -20,10 +20,10 @@ const PageSelectDropdown = ({
 
           return (
             <div className='page-button-container' key={page.pageId}>
-              {isCurrentPage && <div id='current-page'>Current ↓</div>}
+              {/* {isCurrentPage && <div id='current-page'>Current ↓</div>} */}
               <div
                 id={page.pageId}
-                className={`page-button ${clickedClassname}`}
+                className={`page-button ${clickedClassname} ${isCurrentPage ? 'current-page' : ''}`}
                 onClick={() => setClickedPage(page.pageId)} // Use pageId directly
                 // No need for value prop, pageLabel is rendered
               >

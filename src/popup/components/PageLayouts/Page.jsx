@@ -3,10 +3,14 @@ import "../../popup.css";
 import { MockBrowser } from "./MockBrowser.jsx";
 import PageLayoutElement from "./PageLayoutElement.jsx";
 import { APPS } from "../../../background.js";
-import { useDarkMode } from "../../DarkModeContext.js";
 import pageSettingsData from "../page-settings-data.js";
 
-const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutClassName }) => {
+const Page = ({
+  appName = APPS.YOUTUBE,
+  clickedPage,
+  pageElements,
+  pageLayoutClassName,
+}) => {
   const [appSettings, setAppSettings] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -64,6 +68,20 @@ const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutCla
     }
   };
 
+  /**
+   * The "Toggle All Elements" button
+   */
+  const ToggleAllButton = () => {
+    return (
+      <div
+        id='toggle-all'
+        className={`layout-element`}
+        onClick={toggleAllElements}
+      >
+        Toggle All Elements
+      </div>
+    );
+  };
   /**
    * Toggles all elements in a given page.
    * If there is at least one unlocked element that is displayed,
@@ -130,6 +148,19 @@ const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutCla
     });
   };
 
+  /**
+   * Renders the "Other Elements" section
+   * containing elements not present in the Mock Browser
+   */
+  const OtherElements = () => {
+    return (
+      <div id="other-elements">
+        <h2 id='other-elements-header'>Other Elements</h2>
+        {renderElements(pageElements.other)}
+      </div>
+    );
+  };
+
   if (isLoading) {
     return (
       <div style={{ color: "white", textAlign: "center", marginTop: "20px" }}>
@@ -137,33 +168,24 @@ const Page = ({ appName = APPS.YOUTUBE, clickedPage, pageElements, pageLayoutCla
       </div>
     );
   }
-  
+
   const clickedPagePath = pageSettingsData[clickedPage].path;
 
   // Last Selected App remains YouTube for now
   // This url is what is displayed in the browser UI's address bar (i.e. "www.youtube.com/watch")
-  const url = appSettings.generalSettings.lastSelectedApp
-    ? `${appName}.com${clickedPagePath}`
-    : "";
+  const url = `youtube.com${clickedPagePath}`;
 
   return (
     <>
-      <div
-        id='toggle-all'
-        className={`layout-element`}
-        onClick={toggleAllElements}
-      >
-        Toggle All Elements
+      <div id='elements'>
+        <MockBrowser url={url}>
+          <div className={pageLayoutClassName}>
+            {renderElements(pageElements.mainLayout)}
+          </div>
+        </MockBrowser>
+        <OtherElements />
       </div>
-      <MockBrowser url={url}>
-        <div className={pageLayoutClassName}>
-          {renderElements(pageElements.mainLayout)}
-        </div>
-      </MockBrowser>
-      <div>
-        {/* <h2 className='instructions'>Other elements</h2> */}
-        {renderElements(pageElements.other)}
-      </div>
+      <ToggleAllButton />
     </>
   );
 };

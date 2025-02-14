@@ -11,7 +11,7 @@ const pageSettingsData = {
   },
   ['subscriptions-page']: {
     pageId: 'subscriptions-page',
-    label: "Subs",
+    label: "Subscriptions",
     path: "/feed/subscriptions",
     pageLayoutClassName: "subscriptions-page-layout",
     pageElements: {
@@ -54,6 +54,26 @@ const pageSettingsData = {
       mainLayout: ["navigation", "sidebar", "channel"],
       other: ["channelThumbnails"],
     },
+  },
+  ['playlist-page']: {
+    pageId: 'playlist-page',
+    label: "Playlist",
+    path: "/playlist",
+    pageLayoutClassName: "playlist-page-layout",
+    pageElements: {
+      mainLayout: ["navigation", "sidebar", "playlist"],
+      other: ["playlistThumbnails"]
+    }
+  },
+  ['playlists-page']: {
+    pageId: 'playlists-page',
+    label: "All Playlists",
+    path: "/feed/playlists",
+    pageLayoutClassName: "playlists-page-layout",
+    pageElements: {
+      mainLayout: ["navigation", "sidebar", "playlists"],
+      other: ["playlistsThumbnails"]
+    }
   },
 };
 

@@ -1,9 +1,10 @@
 import React from "react";
 import "../../popup.css";
-import { useDarkMode } from '../../DarkModeContext.js';
 
 export const MockBrowser = ({ children, url }) => {
 
+
+console.log('url is', url)
 
   // This component is the mock browser window, which contains
   // the obvious layout elements of the current page

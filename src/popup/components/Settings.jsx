@@ -53,7 +53,7 @@ const Settings = () => {
   );
 
   return (
-    <div style={{ width: "100%" }}>
+    <div id="settings">
       <PageSelectDropdown
         lastSelectedPage={lastSelectedPage}
         clickedPage={clickedPage}

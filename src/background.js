@@ -22,266 +22,271 @@ export const PAGES = {
 
 export const PAGE_NOT_SUPPORTED = "page-not-supported";
 
-// The Master App Settings
-export const oldInitialAppSettings = {
-  generalSettings: {
-    lastSelectedPage: PAGES[APPS.YOUTUBE].HOME_PAGE,
-    darkModeOn: false,
-  },
-  youtube: {
-    pageSettings: {
-      homePage: {
-        label: "Home",
-        path: "/",
-        pageLayoutClassName: "home-page",
-        pageElements: {
-          mainLayout: ["navigation", "sidebar", "videos"],
-          other: ["homeShorts", "homeThumbnails", "youtubePlayables"],
-        },
-      },
-      videoPage: {
-        label: "Video",
-        path: "/watch",
-        pageLayoutClassName: "video-page",
-        pageElements: {
-          mainLayout: [
-            "navigation",
-            "player",
-            "title-and-description",
-            "comments",
-            "recommendations",
-          ],
-          other: ["live-chat", "videoShorts", "videoThumbnails", "end-cards"],
-        },
-      },
-      searchPage: {
-        label: "Search",
-        path: "/results",
-        pageLayoutClassName: "search-page",
-        pageElements: {
-          mainLayout: ["navigation", "sidebar", "results"],
-          other: ["searchShorts", "searchThumbnails", "irrelevantResults"],
-        },
-      },
-      subscriptionsPage: {
-        label: "Subscriptions",
-        path: "/feed/subscriptions",
-        pageLayoutClassName: "subscriptions-page",
-        pageElements: {
-          mainLayout: ["navigation", "sidebar", "videos"],
-          other: ["subscriptionsShorts", "subscriptionsThumbnails"],
-        },
-      },
-    },
-    elementsSettings: {
-      navigation: {
-        label: "Navigation",
-        isShown: true,
-        isLocked: false,
-        selectors: ["#masthead-container"],
-      },
-      player: {
-        label: "▶",
-        isShown: true,
-        isLocked: false,
-        selectors: ["#player"],
-      },
-      "title-and-description": {
-        label: "Title and Description",
-        isShown: true,
-        isLocked: false,
-        selectors: ["#above-the-fold"],
-      },
-      comments: {
-        label: "Comments",
-        isShown: true,
-        isLocked: false,
-        selectors: ["ytd-comments", "ytm-comment-section-renderer"],
-      },
-      recommendations: {
-        label: "Recs",
-        isShown: true,
-        isLocked: false,
-        selectors: ["#related", "#items"],
-      },
-      "live-chat": {
-        label: "Live Chat",
-        isShown: true,
-        isLocked: false,
-        selectors: ["#chat-container"],
-      },
-      videos: {
-        label: "Videos",
-        isShown: true,
-        isLocked: false,
-        selectors: ["#contents", "#header"],
-      },
-      videoShorts: {
-        label: "Shorts (Video)",
-        isShown: true,
-        isLocked: false,
-        selectors: [
-          '[aria-label="Shorts"]',
-          '[title="Shorts"]',
-          "[is-shorts]",
-          "ytd-reel-shelf-renderer",
-        ],
-      },
-      homeShorts: {
-        label: "Shorts (Home)",
-        isShown: true,
-        isLocked: false,
-        selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', "[is-shorts]"],
-      },
-      "end-cards": {
-        label: "Video End Cards",
-        isShown: true,
-        isLocked: false,
-        selectors: [".ytp-ce-element"],
-      },
-      irrelevantResults: {
-        label: "Irrelevant Search Results",
-        isShown: true,
-        isLocked: false,
-        selectors: [
-          "ytd-shelf-renderer[modern-typography]",
-          "ytd-horizontal-card-list-renderer",
-        ],
-      },
-      searchShorts: {
-        label: "Shorts (Search)",
-        isShown: true,
-        isLocked: false,
-        selectors: [
-          '[aria-label="Shorts"]',
-          '[title="Shorts"]',
-          "[is-shorts]",
-          "ytd-reel-shelf-renderer",
-        ],
-      },
-      subscriptionsShorts: {
-        label: "Shorts (Subscriptions)",
-        isShown: true,
-        isLocked: false,
-        selectors: [
-          '[aria-label="Shorts"]',
-          '[title="Shorts"]',
-          "[is-shorts]",
-          "ytd-reel-shelf-renderer",
-        ],
-      },
-      sidebar: {
-        label: "Sidebar",
-        isShown: true,
-        isLocked: false,
-        selectors: ["#guide-content", "ytd-mini-guide-renderer"],
-      },
-      results: {
-        label: "Results",
-        isShown: true,
-        isLocked: false,
-        selectors: ["#page-manager"],
-      },
-      youtubePlayables: {
-        label: "Playables & Breaking News",
-        isShown: true,
-        isLocked: false,
-        selectors: ["ytd-rich-section-renderer"],
-      },
-      homeThumbnails: {
-        label: "Thumbnails (Home)",
-        isShown: true,
-        isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
-      },
-      searchThumbnails: {
-        label: "Thumbnails (Search)",
-        isShown: true,
-        isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-          "#hero-image",
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
-      },
-      subscriptionsThumbnails: {
-        label: "Thumbnails (Subscriptions)",
-        isShown: true,
-        isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
-      },
-      videoThumbnails: {
-        label: "Thumbnails (Video)",
-        isShown: true,
-        isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
-      },
-    },
-  },
-};
+// // The Master App Settings
+// export const oldInitialAppSettings = {
+//   generalSettings: {
+//     lastSelectedPage: PAGES[APPS.YOUTUBE].HOME_PAGE,
+//     darkModeOn: false,
+//   },
+//   youtube: {
+//     pageSettings: {
+//       homePage: {
+//         label: "Home",
+//         path: "/",
+//         pageLayoutClassName: "home-page",
+//         pageElements: {
+//           mainLayout: ["navigation", "sidebar", "videos"],
+//           other: ["homeShorts", "homeThumbnails", "youtubePlayables"],
+//         },
+//       },
+//       videoPage: {
+//         label: "Video",
+//         path: "/watch",
+//         pageLayoutClassName: "video-page",
+//         pageElements: {
+//           mainLayout: [
+//             "navigation",
+//             "player",
+//             "title-and-description",
+//             "comments",
+//             "recommendations",
+//           ],
+//           other: ["live-chat", "videoShorts", "videoThumbnails", "end-cards"],
+//         },
+//       },
+//       searchPage: {
+//         label: "Search",
+//         path: "/results",
+//         pageLayoutClassName: "search-page",
+//         pageElements: {
+//           mainLayout: ["navigation", "sidebar", "results"],
+//           other: ["searchShorts", "searchThumbnails", "irrelevantResults"],
+//         },
+//       },
+//       subscriptionsPage: {
+//         label: "Subscriptions",
+//         path: "/feed/subscriptions",
+//         pageLayoutClassName: "subscriptions-page",
+//         pageElements: {
+//           mainLayout: ["navigation", "sidebar", "videos"],
+//           other: ["subscriptionsShorts", "subscriptionsThumbnails"],
+//         },
+//       },
+//     },
+//     elementsSettings: {
+//       navigation: {
+//         label: "Navigation",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["#masthead-container"],
+//       },
+//       player: {
+//         label: "▶",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["#player"],
+//       },
+//       "title-and-description": {
+//         label: "Title and Description",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["#above-the-fold"],
+//       },
+//       comments: {
+//         label: "Comments",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["ytd-comments", "ytm-comment-section-renderer"],
+//       },
+//       recommendations: {
+//         label: "Recs",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["#related", "#items"],
+//       },
+//       "live-chat": {
+//         label: "Live Chat",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["#chat-container"],
+//       },
+//       videos: {
+//         label: "Videos",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["#contents", "#header"],
+//       },
+//       videoShorts: {
+//         label: "Shorts (Video)",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [
+//           '[aria-label="Shorts"]',
+//           '[title="Shorts"]',
+//           "[is-shorts]",
+//           "ytd-reel-shelf-renderer",
+//         ],
+//       },
+//       homeShorts: {
+//         label: "Shorts (Home)",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', "[is-shorts]"],
+//       },
+//       "end-cards": {
+//         label: "Video End Cards",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [".ytp-ce-element"],
+//       },
+//       irrelevantResults: {
+//         label: "Irrelevant Search Results",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [
+//           "ytd-shelf-renderer[modern-typography]",
+//           "ytd-horizontal-card-list-renderer",
+//         ],
+//       },
+//       searchShorts: {
+//         label: "Shorts (Search)",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [
+//           '[aria-label="Shorts"]',
+//           '[title="Shorts"]',
+//           "[is-shorts]",
+//           "ytd-reel-shelf-renderer",
+//         ],
+//       },
+//       subscriptionsShorts: {
+//         label: "Shorts (Subscriptions)",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [
+//           '[aria-label="Shorts"]',
+//           '[title="Shorts"]',
+//           "[is-shorts]",
+//           "ytd-reel-shelf-renderer",
+//         ],
+//       },
+//       sidebar: {
+//         label: "Sidebar",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["#guide-content", "ytd-mini-guide-renderer"],
+//       },
+//       results: {
+//         label: "Results",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["#page-manager"],
+//       },
+//       youtubePlayables: {
+//         label: "Playables & Breaking News",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: ["ytd-rich-section-renderer"],
+//       },
+//       homeThumbnails: {
+//         label: "Thumbnails (Home)",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [
+//           "ytd-thumbnail",
+//           "ytd-playlist-thumbnail",
+//           "#thumbnail",
+//           "#thumbnail-container",
+//           ".shelf-skeleton",
+//           ".thumbnail",
+//           ".ytp-videowall-still-image",
+//           ".ShortsLockupViewModelHostThumbnailContainer",
+//         ],
+//         additionalCss: `
+//         .metadata.ytd-compact-video-renderer {
+//           padding-right: 0 !important;
+//         }
+//         .shelf-skeleton .video-skeleton {
+//           margin-right: 4px;
+//         }`,
+//       },
+//       searchThumbnails: {
+//         label: "Thumbnails (Search)",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [
+//           "ytd-thumbnail",
+//           "ytd-playlist-thumbnail",
+//           "#thumbnail",
+//           "#thumbnail-container",
+//           ".shelf-skeleton",
+//           ".thumbnail",
+//           ".ytp-videowall-still-image",
+//           ".ShortsLockupViewModelHostThumbnailContainer",
+//           "#hero-image",
+//         ],
+//         additionalCss: `
+//         .metadata.ytd-compact-video-renderer {
+//           padding-right: 0 !important;
+//         }
+//         .shelf-skeleton .video-skeleton {
+//           margin-right: 4px;
+//         }`,
+//       },
+//       subscriptionsThumbnails: {
+//         label: "Thumbnails (Subscriptions)",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [
+//           "ytd-thumbnail",
+//           "ytd-playlist-thumbnail",
+//           "#thumbnail",
+//           "#thumbnail-container",
+//           ".shelf-skeleton",
+//           ".thumbnail",
+//           ".ytp-videowall-still-image",
+//           ".ShortsLockupViewModelHostThumbnailContainer",
+//         ],
+//         additionalCss: `
+//         .metadata.ytd-compact-video-renderer {
+//           padding-right: 0 !important;
+//         }
+//         .shelf-skeleton .video-skeleton {
+//           margin-right: 4px;
+//         }`,
+//       },
+//       videoThumbnails: {
+//         label: "Thumbnails (Video)",
+//         isShown: true,
+//         isLocked: false,
+//         selectors: [
+//           "ytd-thumbnail",
+//           "ytd-playlist-thumbnail",
+//           "#thumbnail",
+//           "#thumbnail-container",
+//           ".shelf-skeleton",
+//           ".thumbnail",
+//           ".ytp-videowall-still-image",
+//           ".ShortsLockupViewModelHostThumbnailContainer",
+//         ],
+//         additionalCss: `
+//         .metadata.ytd-compact-video-renderer {
+//           padding-right: 0 !important;
+//         }
+//         .shelf-skeleton .video-skeleton {
+//           margin-right: 4px;
+//         }`,
+//       },
+//     },
+//   },
+// };
 
-
+/**
+ * TODO: Remove all selectors data. 
+ * That shit is static, so it should sit on the content.js page
+ * The only thing that should be kept in the state is whether 
+ * something is supposed to be shown and locked.
+ */
 export const initialAppSettings = {
   generalSettings: {
     lastSelectedPage: PAGES[APPS.YOUTUBE].HOME_PAGE,
@@ -337,234 +342,121 @@ export const initialAppSettings = {
         label: "Navigation",
         isShown: true,
         isLocked: false,
-        selectors: ["#masthead-container"],
       },
       player: {
         label: "▶",
         isShown: true,
         isLocked: false,
-        selectors: ["#player"],
       },
       "title-and-description": {
         label: "Title and Description",
         isShown: true,
         isLocked: false,
-        selectors: ["#above-the-fold"],
       },
       comments: {
         label: "Comments",
         isShown: true,
         isLocked: false,
-        selectors: ["ytd-comments", "ytm-comment-section-renderer"],
       },
       channel: {
         label: "Channel",
         isShown: true,
         isLocked: false,
-        selectors: ["ytd-page-manager"]
       },
       recommendations: {
         label: "Recs",
         isShown: true,
         isLocked: false,
-        selectors: ["#related", "#items"],
       },
       "live-chat": {
         label: "Live Chat",
         isShown: true,
         isLocked: false,
-        selectors: ["#chat-container"],
       },
       videos: {
         label: "Videos",
         isShown: true,
         isLocked: false,
-        selectors: ["#contents", "#header"],
       },
       videoShorts: {
         label: "Shorts (Video)",
         isShown: true,
         isLocked: false,
-        selectors: [
-          '[aria-label="Shorts"]',
-          '[title="Shorts"]',
-          "[is-shorts]",
-          "ytd-reel-shelf-renderer",
-        ],
       },
       homeShorts: {
         label: "Shorts (Home)",
         isShown: true,
         isLocked: false,
-        selectors: ['[aria-label="Shorts"]', '[title="Shorts"]', "[is-shorts]"],
       },
       "end-cards": {
         label: "Video End Cards",
         isShown: true,
         isLocked: false,
-        selectors: [".ytp-ce-element"],
       },
       irrelevantResults: {
         label: "Irrelevant Search Results",
         isShown: true,
         isLocked: false,
-        selectors: [
-          "ytd-shelf-renderer[modern-typography]",
-          "ytd-horizontal-card-list-renderer",
-        ],
       },
       searchShorts: {
         label: "Shorts (Search)",
         isShown: true,
         isLocked: false,
-        selectors: [
-          '[aria-label="Shorts"]',
-          '[title="Shorts"]',
-          "[is-shorts]",
-          "ytd-reel-shelf-renderer",
-        ],
       },
       subscriptionsShorts: {
         label: "Shorts (Subscriptions)",
         isShown: true,
         isLocked: false,
-        selectors: [
-          '[aria-label="Shorts"]',
-          '[title="Shorts"]',
-          "[is-shorts]",
-          "ytd-reel-shelf-renderer",
-        ],
       },
       sidebar: {
         label: "Sidebar",
         isShown: true,
         isLocked: false,
-        selectors: ["#guide-content", "ytd-mini-guide-renderer"],
       },
       results: {
         label: "Results",
         isShown: true,
         isLocked: false,
-        selectors: ["#page-manager"],
       },
       youtubePlayables: {
         label: "Playables & Breaking News",
         isShown: true,
         isLocked: false,
-        selectors: ["ytd-rich-section-renderer"],
       },
       homeThumbnails: {
         label: "Thumbnails (Home)",
         isShown: true,
         isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
       },
       channelThumbnails: {
         label: "Thumbnails (Channel)",
         isShown: true,
         isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-          "#hero-image",
-          "yt-decorated-avatar-view-model"
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
+      },
+      playlistsThumbnails: {
+          label: "Thumbnails (Playlists)",
+          isShown: true,
+          isLocked: false,
       },
       searchThumbnails: {
         label: "Thumbnails (Search)",
         isShown: true,
         isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-          "#hero-image",
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
       },
       subscriptionsThumbnails: {
         label: "Thumbnails (Subscriptions)",
         isShown: true,
         isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
       },
       videoThumbnails: {
         label: "Thumbnails (Video)",
         isShown: true,
         isLocked: false,
-        selectors: [
-          "ytd-thumbnail",
-          "ytd-playlist-thumbnail",
-          "#thumbnail",
-          "#thumbnail-container",
-          ".shelf-skeleton",
-          ".thumbnail",
-          ".ytp-videowall-still-image",
-          ".ShortsLockupViewModelHostThumbnailContainer",
-        ],
-        additionalCss: `
-        .metadata.ytd-compact-video-renderer {
-          padding-right: 0 !important;
-        }
-        .shelf-skeleton .video-skeleton {
-          margin-right: 4px;
-        }`,
+      },
+      playlists: {
+        label: "Playlists",
+        isShown: true,
+        isLocked: false,
       },
     },
   },
@@ -581,6 +473,8 @@ export const APP_MAPPINGS = {
       "/results": "search-page",
       "/": "home-page",
       "/feed/subscriptions": "subscriptions-page",
+      "/feed/playlists": "playlists-page",
+      "/playlist": "playlist-page"
     },
   },
 };
@@ -608,9 +502,21 @@ const getPageType = (url) => {
         return "channel-page";
       }
 
-      // Pattern matching or generic handling
-      if (pathname.startsWith("/feed/")) {
+      // Subscriptions page
+      if (pathname.startsWith("/feed/subscriptions")) {
         return "subscriptions-page";
+      }
+
+      // Single Playlist Page (TODO)
+
+      // Playlists page
+      if (pathname.startsWith("/feed/playlists")) {
+        return "playlists-page";
+      }
+
+      // Playlist page
+      if (pathname.startsWith("/playlist")) {
+        return "playlist-page";
       }
 
       // Other pattern matching or default handling
@@ -623,97 +529,103 @@ const getPageType = (url) => {
   }
 };
 
-/**
- * This function fixes selectors that should be arrays but are objects
- * for both Thumbnails and Shorts related elements
- */
-// function fixObjectSelectors(settings) {
-//   if (settings.youtube && settings.youtube.elementsSettings) {
-//     Object.keys(settings.youtube.elementsSettings).forEach((key) => {
-//       if (key.endsWith("Thumbnails") || key.endsWith("Shorts")) {
-//         const element = settings.youtube.elementsSettings[key];
-//         if (
-//           element.selectors &&
-//           typeof element.selectors === "object" &&
-//           !Array.isArray(element.selectors)
-//         ) {
-//           // Convert object to array
-//           element.selectors = Object.values(element.selectors);
-//         }
-//       }
-//     });
-//   }
-//   return settings;
-// }
 
 /**
- * This function fixes the typo in subscriptionsPage pageElements
- */
-// function fixSubscriptionsShorts(settings) {
-//   if (
-//     settings.youtube &&
-//     settings.youtube.pageSettings &&
-//     settings.youtube.pageSettings.subscriptionsPage &&
-//     settings.youtube.pageSettings.subscriptionsPage.pageElements &&
-//     settings.youtube.pageSettings.subscriptionsPage.pageElements.other &&
-//     Array.isArray(
-//       settings.youtube.pageSettings.subscriptionsPage.pageElements.other
-//     )
-//   ) {
-//     const otherElements =
-//       settings.youtube.pageSettings.subscriptionsPage.pageElements.other;
-//     const index = otherElements.indexOf("subscriptionShorts");
-//     if (index !== -1) {
-//       otherElements[index] = "subscriptionsShorts";
-//     }
-//   }
-//   return settings;
-// }
-
-/**
+ * DEPRECATED
  * This function adds the Channel Page data into the appSettings
  */
 
-function addChannelPage(settings) {
-  // First, remove the pageSettings object
+// function addChannelPage(settings) {
+//   // First, remove the pageSettings object
+//   delete settings.youtube.pageSettings;
+
+//   // Now add the elements relevant to the Channel Page
+//   settings.youtube.elementsSettings.channelThumbnails = {
+//     label: "Thumbnails (Channel)",
+//     isShown: true,
+//     isLocked: false,
+//     selectors: [
+//       "ytd-thumbnail",
+//       "ytd-playlist-thumbnail",
+//       "#thumbnail",
+//       "#thumbnail-container",
+//       ".shelf-skeleton",
+//       ".thumbnail",
+//       ".ytp-videowall-still-image",
+//       ".ShortsLockupViewModelHostThumbnailContainer",
+//       "#hero-image",
+//       "yt-decorated-avatar-view-model"
+//     ],
+//     additionalCss: `
+//     .metadata.ytd-compact-video-renderer {
+//       padding-right: 0 !important;
+//     }
+//     .shelf-skeleton .video-skeleton {
+//       margin-right: 4px;
+//     }`,
+//   };
+
+//   settings.youtube.elementsSettings.channel = {
+//     label: "Channel",
+//     isShown: true,
+//     isLocked: false,
+//     selectors: ["ytd-page-manager"]
+//   };
+
+//   return settings;
+// }
+
+
+
+/**
+ * DEPRECATED
+ * This function adds the Playlists Page data into the appSettings
+ */
+
+// function addPlaylistsPage(settings) {
+  
+//   delete settings.youtube.pageSettings;
+//   // Now add the elements relevant to the Playlists Page
+//   // playlists, playliststhumbnails
+
+//   settings.youtube.elementsSettings.playlistsThumbnails = {
+//     label: "Thumbnails (Playlists)",
+//     isShown: true,
+//     isLocked: false,
+//   };
+
+//   settings.youtube.elementsSettings.playlists = {
+//     label: "Playlists",
+//     isShown: true,
+//     isLocked: false,
+//   };
+
+//   return settings;
+// }
+
+/**
+ * This function adds the Playlist Page data into the appSettings
+ */
+
+function addPlaylistPage(settings) {
   delete settings.youtube.pageSettings;
+  // Now add the elements relevant to the Playlists Page
+  // playlist, playlistthumbnails
 
-  // Now add the elements relevant to the Channel Page
-  settings.youtube.elementsSettings.channelThumbnails = {
-    label: "Thumbnails (Channel)",
+  settings.youtube.elementsSettings.playlistThumbnails = {
+    label: "Thumbnails (Playlist)",
     isShown: true,
-    isLocked: false,
-    selectors: [
-      "ytd-thumbnail",
-      "ytd-playlist-thumbnail",
-      "#thumbnail",
-      "#thumbnail-container",
-      ".shelf-skeleton",
-      ".thumbnail",
-      ".ytp-videowall-still-image",
-      ".ShortsLockupViewModelHostThumbnailContainer",
-      "#hero-image",
-      "yt-decorated-avatar-view-model"
-    ],
-    additionalCss: `
-    .metadata.ytd-compact-video-renderer {
-      padding-right: 0 !important;
-    }
-    .shelf-skeleton .video-skeleton {
-      margin-right: 4px;
-    }`,
-  };
+    isLocked: false
+  }
 
-  settings.youtube.elementsSettings.channel = {
-    label: "Channel",
+  settings.youtube.elementsSettings.playlist = {
+    label: "Playlist",
     isShown: true,
-    isLocked: false,
-    selectors: ["ytd-page-manager"]
-  };
+    isLocked: false
+  }
 
   return settings;
 }
-
 
 /**
  * Installation and Update Logic
@@ -734,7 +646,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
       }
 
       // Apply fixes
-      updatedSettings = await addChannelPage(updatedSettings);
+      updatedSettings = await addPlaylistPage(updatedSettings);
 
       await chrome.storage.sync.set({ appSettings: updatedSettings });
       console.log("App settings updated successfully:", updatedSettings);

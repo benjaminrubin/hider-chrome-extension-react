@@ -49,26 +49,38 @@ const Menu = ({ setDisplayMenu, displayMenu }) => {
     );
   };
 
-  return (
-    <div id='menu' className={renderMenuClassNames()}>
+  const CloseMenuButton = () => {
+    return (
       <div id='close-menu-button' onClick={() => setDisplayMenu(false)}>
         <div>&times;</div>
       </div>
-      <div id='menu-body'>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            marginBottom: "2rem",
-          }}
-        >
-          <Logo />
-          <h4 id='version'>Version {version}</h4>
-          <div id='last-updated'>Last updated on September 17th, 2024</div>
-        </div>
+    );
+  };
+
+  const MenuHeader = () => {
+    return (
+      <div id='menu-header'>
+        <Logo />
+        <h4 id='version'>Version {version}</h4>
+        <div id='last-updated'>Last updated on September 17th, 2024</div>
+        {/* <hr id="menu-header-divider" /> */}
+      </div>
+    );
+  };
+
+  const MenuSettings = () => {
+    return (
+      <div id='menu-settings'>
+        <h3>Extension Settings</h3>
         <ToggleDarkModeButton />
       </div>
-      <footer>
+    );
+  };
+
+  const Support = () => {
+    return (
+      <div id='support'>
+        <h3>Support</h3>
         <div id='issues'>Encountering any issues?</div>{" "}
         <div id='submit-ticket'>
           {" "}
@@ -79,14 +91,27 @@ const Menu = ({ setDisplayMenu, displayMenu }) => {
             Submit a support ticket here
           </a>
         </div>
-        <DonateButton />
         <div>
           Developed by{" "}
           <a href='https://www.benjaminrubin.me' target='_blank'>
             Benjamin Floyd Rubin
           </a>
         </div>
-      </footer>
+        <DonateButton />
+      </div>
+    );
+  };
+
+  return (
+    <div id='menu' className={renderMenuClassNames()}>
+      <CloseMenuButton />
+      <div id='menu-body'>
+        <MenuHeader />
+        <div id='menu-settings-body'>
+          <MenuSettings />
+          <Support />
+        </div>
+      </div>
     </div>
   );
 };
