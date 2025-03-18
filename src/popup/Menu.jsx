@@ -44,7 +44,7 @@ const Menu = ({ setDisplayMenu, displayMenu }) => {
         target='_blank'
         id='donate-button'
       >
-        <div>Buy me a coffee! ☕️</div>
+        <div>Donate & Support ♥️</div>
       </a>
     );
   };
@@ -62,7 +62,7 @@ const Menu = ({ setDisplayMenu, displayMenu }) => {
       <div id='menu-header'>
         <Logo />
         <h4 id='version'>Version {version}</h4>
-        <div id='last-updated'>Last updated on September 17th, 2024</div>
+        <div id='last-updated'>Last updated on March 18th, 2025</div>
         {/* <hr id="menu-header-divider" /> */}
       </div>
     );

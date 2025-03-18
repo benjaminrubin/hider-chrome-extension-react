@@ -146,6 +146,9 @@ const allSelectors = {
       '[title="Shorts"]',
       "[is-shorts]",
       "ytd-reel-shelf-renderer",
+      "a[href^='/shorts/']",
+      "ytd-video-renderer:has(a[href^='/shorts/'])",
+      "ytd-video-renderer:has(ytd-thumbnail-overlay-time-status-renderer[overlay-style='SHORTS'])"
     ],
   },
   subscriptionsShorts: {

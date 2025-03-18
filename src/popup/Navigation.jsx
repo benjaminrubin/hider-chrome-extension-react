@@ -16,7 +16,7 @@ const Navigation = ({ setDisplayMenu }) => {
         setDisplayMenu={setDisplayMenu}
       />
       <a
-        href='https://chromewebstore.google.com/detail/dnnpgmbhdojpjkpeeafgdelohfhbpiga?hl=en'
+        href='https://chromewebstore.google.com/detail/hide-thumbnails-shorts-an/dnnpgmbhdojpjkpeeafgdelohfhbpiga/reviews'
         style={{ textDecoration: "none" }}
         target='_blank'
       >
